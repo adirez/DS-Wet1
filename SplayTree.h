@@ -179,8 +179,8 @@ void SplayTree<T>::splay(SplayTree::Node *node) {
     while (node != root && node->parent != root) {
         Node *p = node->parent;
         Node *g = p->parent;
-         if ((node->data < p->data && node->data > g->data) ||
-             (node->data > p->data && node->data < g->data)) {
+         if ((*node->data < *p->data && *node->data > *g->data) ||
+             (*node->data > *p->data && *node->data < *g->data)) {
             zigZag(node);
         } else {
             zigZig(node);
@@ -249,10 +249,10 @@ void SplayTree<T>::zigZag(SplayTree::Node *node) {
         node->left_son = p;
     }
     node->parent = g->parent;
-    if (g->parent != nullptr && g->data < g->parent->data) {
+    if (g->parent != nullptr && *g->data < *g->parent->data) {
         //g was a left son
         g->parent->left_son = node;
-    } else {
+    } else if (g->parent != nullptr){
         g->parent->right_son = node;
     }
     p->parent = node;
@@ -299,10 +299,10 @@ void SplayTree<T>::zigZig(SplayTree::Node *node) {
         //attach g to p
         p->left_son = g;
     }
-    if (g->parent != nullptr && g->data < g->parent->data) {
+    if (g->parent != nullptr && *g->data < *g->parent->data) {
         //g was a left son
         g->parent->left_son = node;
-    } else {
+    } else if (g->parent != nullptr){
         g->parent->right_son = node;
     }
     node->parent = g->parent;
