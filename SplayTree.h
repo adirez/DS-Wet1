@@ -5,12 +5,12 @@
 #ifndef WET1_SPLAYTREE_H
 #define WET1_SPLAYTREE_H
 
+#include <assert.h>
 #include "Exceptions.h"
 
 class SplayTree {
 private:
 
-    Node* findAux(Node* cur_node, int key);
     class Node{
     private:
         int data;
@@ -23,6 +23,12 @@ private:
         Node(int data, Node *parent); //TODO: change to const data when generic
         ~Node() = default; //TODO: need to delete the data when generic
     };
+
+    Node* findAux(Node* cur_node, int key);
+    void inOrderAux(Node* cur_node, int key);
+    void zig(Node* node);
+    void zigZag(Node* node);
+    void zigZig(Node* node);
 
     Node *root;
     Node *min;
@@ -91,6 +97,95 @@ void SplayTree::insert(const int data) {
     }
     insert_node->left_son = new_node;
 }
+
+void SplayTree::zig(SplayTree::Node *node) {
+    assert(node->parent == root);
+    if(root->left_son == node){
+        root->left_son = node->right_son;
+        root->left_son->parent = root;
+        node->right_son = root;
+    } else{
+        root->right_son = node->left_son;
+        root->right_son->parent = root;
+        node->left_son = root;
+    }
+    node->parent = nullptr;
+    root->parent = node;
+    root = node;
+}
+
+void SplayTree::zigZag(SplayTree::Node *node) {
+    Node *p = node->parent;
+    Node *g = p->parent;
+    if(node->data < p->data){
+        //attach node's left son to g
+        g->right_son = node->left_son;
+        g->right_son->parent = g;
+        //attach nodes right son to p
+        p->left_son = node->right_son;
+        p->left_son->parent = p;
+        //attach both g and p to node
+        node->left_son = p;
+        node->right_son = g;
+    }
+    else {
+        //attach node's right son to g
+        g->left_son = node->right_son;
+        g->left_son->parent = g;
+        //attach nodes left son to p
+        p->right_son = node->left_son;
+        p->right_son->parent = p;
+        //attach both g and p to node
+        node->right_son = g;
+        node->left_son = p;
+    }
+    node->parent = g->parent;
+    p->parent = node;
+    g->parent = node;
+}
+
+void SplayTree::zigZig(SplayTree::Node *node) {
+    Node *p = node->parent;
+    Node *g = p->parent;
+    if(node->data < p->data){
+        //attach p's right son to g
+        g->left_son = p->right_son;
+        g->left_son->parent = g;
+        //attach nodes right son to p
+        p->left_son = node->right_son;
+        p->left_son->parent = p;
+        //attach p to node
+        node->right_son = p;
+        //attach g to p
+        p->right_son = g;
+    }
+    else {
+        //attach p's left son to g
+        g->right_son = p->left_son;
+        g->right_son->parent = g;
+        //attach nodes left son to p
+        p->right_son = node->left_son;
+        p->right_son->parent = p;
+        //attach p to node
+        node->left_son = p;
+        p->parent = node;
+        //attach g to p
+        p->left_son = g;
+        g->parent = p;
+    }
+    p->parent = node;
+    g->parent = p;
+}
+
+
+
+/*template <class Predicate>
+void SplayTree::inOrderAux(SplayTree::Node *cur_node, int key) {
+    if(cur_node == nullptr){
+        return;
+    }
+
+}*/
 
 
 /*void SplayTree::remove(int key) {
