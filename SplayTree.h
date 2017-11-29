@@ -41,8 +41,8 @@ public:
     SplayTree &operator=(const SplayTree &splay_tree) = delete;
     ~SplayTree();
     Node &find(Node *cur_node, int key);
-    void insert(int data); //TODO: change to const when generic
-
+    void insert(int key); //TODO: change to const when generic
+    void remove(int key); //TODO: change to const when generic
 };
 
 SplayTree::Node *SplayTree::findAux(SplayTree::Node *cur_node, int key) {
@@ -81,21 +81,83 @@ SplayTree::Node &SplayTree::find(Node *cur_node, int key) {
 
 }
 
-void SplayTree::insert(const int data) {
-    if(root == nullptr){
-        auto *new_root = new Node(data, nullptr);
+void SplayTree::insert(const int key) {
+    if (root == nullptr) {
+        auto *new_root = new Node(key, nullptr); //TODO: auto???
+        root = new_root;
+        max = root;
+        min = root;
         return;
     }
-    Node *insert_node = find(root, data);
-    if(data == insert_node->data){
+    Node &find_node = find(root, key);
+    if (key == find_node.data) {
         throw KeyAlreadyExists();
     }
-    auto *new_node = new Node(data, insert_node); //TODO: what the fuck is auto?!?!
-    if(data > insert_node->data){
-        insert_node->right_son = new_node;
+
+    //meaning the data we want to insert did not exist in the tree
+    auto *to_insert = new Node(key, nullptr); //TODO: auto???
+
+    //the value closest to the one we needed is now in the root after zig-zag
+    to_insert->left_son = root;
+    to_insert->right_son = root->right_son;
+
+    //updating the previously root and it's right son as both sons of the inserted value
+    to_insert->left_son->parent = to_insert;
+    to_insert->right_son->parent = to_insert;
+    to_insert->left_son->right_son = nullptr;
+
+    //updating the root
+    root = to_insert;
+
+    //updating min/max of the tree
+    if (root->data > max->data) {
+        max = root;
+    } else if (root->data < min->data) {
+        min = root;
+    }
+}
+
+void SplayTree::remove(int key) {
+    if (root == nullptr) {
+        throw EmptyTree();
+    }
+
+    Node &find_node = find(root, key);
+    if (key != root->data) {
+        throw KeyNotFound();
+    }
+
+    Node *left_son= root->left_son;
+    Node *right_son = root->right_son;
+    delete root;
+    size--;
+
+    if (size == 0) {
+
+        //if the tree is empty we're done
+        root = nullptr;
+        max = nullptr;
+        min = nullptr;
+        return;
+    } else if (left_son == nullptr) {
+
+        //if there's no left son then the tree is the right son
+        root = right_son;
+        min = root;
+        //in this case max won't change
         return;
     }
-    insert_node->left_son = new_node;
+
+    //finding the max node of the left son and making it the new root
+    while (left_son->right_son != nullptr) {
+        left_son = left_son->right_son;
+    }
+    root = left_son;
+    if (right_son == nullptr) {
+        max = root;
+    }
+
+    root->right_son = right_son;
 }
 
 void SplayTree::zig(SplayTree::Node *node) {
@@ -187,33 +249,6 @@ void SplayTree::inOrderAux(SplayTree::Node *cur_node, int key) {
 
 }*/
 
-
-/*void SplayTree::remove(int key) {
-    if(root == nullptr){
-        throw EmptyTree();
-    }
-    Node *to_remove = find(root, key);
-    if(to_remove->data != key){
-        throw KeyNotFound();
-    }
-    if(to_remove == root){
-        delete root;
-    }
-    //meaning to_remove is the left son of his parent
-    if(to_remove->data < to_remove->parent->data){
-        if(to_remove->left_son != nullptr){
-            //finds the biggest node in the left sons node
-            Node *closest = find(to_remove->left_son, key);
-            closest->parent->right_son = nullptr; //TODO: assuming we got to the biggest
-            closest->parent = to_remove->parent;
-            to_remove->parent->left_son = closest;
-            closest->right_son = to_remove->right_son;
-            closest->left_son = to_remove->left_son;
-        }
-
-    }
-
-}*/
 
 
 #endif //WET1_SPLAYTREE_H
