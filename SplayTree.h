@@ -10,6 +10,7 @@
 class SplayTree {
 private:
 
+    Node* findAux(Node* cur_node, int key);
     class Node{
     private:
         int data;
@@ -33,23 +34,45 @@ public:
     SplayTree(const SplayTree &splay_tree) = delete ;
     SplayTree &operator=(const SplayTree &splay_tree) = delete;
     ~SplayTree();
-    SplayTree::Node *find(Node *cur_node, int key);
+    Node &find(Node *cur_node, int key);
     void insert(int data); //TODO: change to const when generic
-    void remove(int key); //TODO: change to const
-    SplayTree::Node *getMin();
-    SplayTree::Node *getMax();
-    void join(SplayTree small_tree, SplayTree big_tree);
-    void split(SplayTree root);
-    void printInOrder(SplayTree splay_tree);
+
 };
 
-SplayTree::Node::Node(int data, Node *parent) : data(data), right_son(right_son), left_son(left_son), parent(parent){}
+SplayTree::Node *SplayTree::findAux(SplayTree::Node *cur_node, int key) {
+    if(key == cur_node->data){
+        return cur_node;
+    }
+    if(key > cur_node->data){
+        if(cur_node->right_son == nullptr){
+            return cur_node;
+        }
+        return findAux(cur_node->right_son, key);
+    }
+    if(key < cur_node->data){
+        if(cur_node->left_son == nullptr){
+            return cur_node;
+        }
+        return findAux(cur_node->left_son, key);
+    }
+}
 
-SplayTree::SplayTree(): root(nullptr), min(nullptr), max(nullptr), size(0){}
+SplayTree::Node::Node(int data, Node *parent) : data(data), right_son(nullptr), left_son(nullptr), parent(parent){}
+
+SplayTree::SplayTree() : root(nullptr), min(nullptr), max(nullptr), size(0){}
 
 
 SplayTree::~SplayTree() {
     delete root;
+}
+
+
+
+SplayTree::Node &SplayTree::find(Node *cur_node, int key) {
+    if(key == 0){ //TODO: change to nullptr
+        throw NullParameter();
+    }
+
 }
 
 void SplayTree::insert(const int data) {
@@ -69,28 +92,8 @@ void SplayTree::insert(const int data) {
     insert_node->left_son = new_node;
 }
 
-SplayTree::Node *SplayTree::find(Node *cur_node, int key) {
-    if(key == 0){ //TODO: change to nullptr
-        throw NullParameter();
-    }
-    if(key == cur_node->data){
-        return cur_node;
-    }
-    if(key > cur_node->data){
-        if(cur_node->right_son == nullptr){
-            return cur_node;
-        }
-        return find(cur_node->right_son, key);
-    }
-    if(key < cur_node->data){
-        if(cur_node->left_son == nullptr){
-            return cur_node;
-        }
-        return find(cur_node->left_son, key);
-    }
-}
 
-void SplayTree::remove(int key) {
+/*void SplayTree::remove(int key) {
     if(root == nullptr){
         throw EmptyTree();
     }
@@ -115,7 +118,7 @@ void SplayTree::remove(int key) {
 
     }
 
-}
+}*/
 
 
 #endif //WET1_SPLAYTREE_H
