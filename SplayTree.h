@@ -82,6 +82,9 @@ void SplayTree::insert(const int key) {
         found_node->right_son = to_insert;
     }
     splay(to_insert);
+    if (found_node == nullptr) {
+        root = to_insert;
+    }
     //updating min/max of the tree
     if (root->right_son == nullptr) {
         max = root;
@@ -109,8 +112,8 @@ void SplayTree::remove(int key) {
     if (size == 0) {
         //if the tree is empty we're done
         root = nullptr;
-        max = 0;
-        min = 0;
+        max = 0; //TODO: change to nullptr
+        min = 0; //TODO: change to nullptr
         return;
     } else if (left_son == nullptr) {
 
