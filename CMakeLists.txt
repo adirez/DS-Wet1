@@ -3,5 +3,5 @@ project(Wet1)
 
 set(CMAKE_CXX_STANDARD 11)
 
-set(SOURCE_FILES main1.cpp library1.h SplayTree.cpp SplayTree.h)
+set(SOURCE_FILES main1.cpp library1.h SplayTree.cpp SplayTree.h Exceptions.h)
 add_executable(Wet1 ${SOURCE_FILES})
