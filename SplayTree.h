@@ -179,6 +179,9 @@ void SplayTree::zig(SplayTree::Node *node) {
 void SplayTree::zigZag(SplayTree::Node *node) {
     Node *p = node->parent;
     Node *g = p->parent;
+    if (g == root) {
+        root = node;
+    }
     if(node->data < p->data){
         //attach node's left son to g
         g->right_son = node->left_son;
@@ -187,8 +190,8 @@ void SplayTree::zigZag(SplayTree::Node *node) {
         p->left_son = node->right_son;
         p->left_son->parent = p;
         //attach both g and p to node
-        node->left_son = p;
-        node->right_son = g;
+        node->left_son = g;
+        node->right_son = p;
     }
     else {
         //attach node's right son to g
@@ -202,6 +205,12 @@ void SplayTree::zigZag(SplayTree::Node *node) {
         node->left_son = p;
     }
     node->parent = g->parent;
+    if (g->data < g->parent->data) {
+        //g was a left son
+        g->parent->left_son = node;
+    } else {
+        g->parent->right_son = node;
+    }
     p->parent = node;
     g->parent = node;
 }
@@ -209,6 +218,9 @@ void SplayTree::zigZag(SplayTree::Node *node) {
 void SplayTree::zigZig(SplayTree::Node *node) {
     Node *p = node->parent;
     Node *g = p->parent;
+    if (g == root) {
+        root = node;
+    }
     if(node->data < p->data){
         //attach p's right son to g
         g->left_son = p->right_son;
@@ -218,6 +230,7 @@ void SplayTree::zigZig(SplayTree::Node *node) {
         p->left_son->parent = p;
         //attach p to node
         node->right_son = p;
+        p->parent = node;
         //attach g to p
         p->right_son = g;
     }
@@ -233,9 +246,14 @@ void SplayTree::zigZig(SplayTree::Node *node) {
         p->parent = node;
         //attach g to p
         p->left_son = g;
-        g->parent = p;
     }
-    p->parent = node;
+    if (g->data < g->parent->data) {
+        //g was a left son
+        g->parent->left_son = node;
+    } else {
+        g->parent->right_son = node;
+    }
+    node->parent = g->parent;
     g->parent = p;
 }
 
