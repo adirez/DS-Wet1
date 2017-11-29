@@ -99,7 +99,11 @@ void SplayTree<T>::insert(const T &key) {
     }
     auto *to_insert = new Node(key, found_node);
     if (found_node != nullptr) {
-        found_node->right_son = to_insert;
+        if(key < *found_node->data){
+            found_node->left_son = to_insert;
+        } else {
+            found_node->right_son = to_insert;
+        }
     }
     splay(to_insert);
     if (found_node == nullptr) {
@@ -191,15 +195,15 @@ void SplayTree<T>::zig(SplayTree::Node *node) {
     assert(node->parent == root);
     if (root->left_son == node) {
         if(node->right_son != nullptr){
-            root->left_son = node->right_son;
             root->left_son->parent = root;
         }
+        root->left_son = node->right_son;
         node->right_son = root;
     } else {
         if(node->left_son != nullptr){
-            root->right_son = node->left_son;
             root->right_son->parent = root;
         }
+        root->right_son = node->left_son;
         node->left_son = root;
     }
     node->parent = nullptr;
