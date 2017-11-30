@@ -122,7 +122,7 @@ void SplayTree<T>::remove(const T &key) {
         throw EmptyTree();
     }
     Node *found_node = findAux(root, key);
-    if (key != root->data) {
+    if (key != *root->data) {
         throw KeyNotFound();
     }
     splay(found_node);
