@@ -48,6 +48,7 @@ protected:
 
 class GladiatorID : public Gladiator{
 private:
+    friend class Colosseum;
     GladiatorLevel *ptr_to_level;
     GladiatorLevel *ptr_to_self_in_trainer;
     Trainer *ptr_to_trainer;
