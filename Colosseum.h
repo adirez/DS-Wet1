@@ -37,6 +37,7 @@ public:
     virtual ~Gladiator() {};
 
 protected:
+    friend class Stimulant;
     friend class Colosseum;
     int id;
     int level;
