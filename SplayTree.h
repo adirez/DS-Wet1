@@ -122,10 +122,10 @@ void SplayTree<T>::remove(const T &key) {
         throw EmptyTree();
     }
     Node *found_node = findAux(root, key);
+    splay(found_node);
     if (key != *root->data) {
         throw KeyNotFound();
     }
-    splay(found_node);
     Node *left_son = root->left_son;
     Node *right_son = root->right_son;
     delete root;
@@ -142,20 +142,28 @@ void SplayTree<T>::remove(const T &key) {
         //if there's no left son then the tree is the right son
         root = right_son;
         min = root;
+        root->parent = nullptr;
         //in this case max won't change
         return;
     }
+    SplayTree *left_tree = new SplayTree();
+    left_tree->root = left_son;
+    left_son->parent = nullptr;
+
     //finding the max node of the left son and making it the new root
     Node *max_left = left_son;
     while (max_left->right_son != nullptr) {
         max_left = max_left->right_son;
     }
+    left_tree->splay(max_left);
     root = max_left;
+    left_tree->root = nullptr;
+    delete left_tree;
+
     if (right_son == nullptr) {
         max = root;
     }
 
-    root->left_son = left_son;
     root->right_son = right_son;
     root->parent = nullptr;
 }
