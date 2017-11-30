@@ -4,9 +4,7 @@
 
 #include "Colosseum.h"
 
-Gladiator::Gladiator(int id, int level, Gladiator *ptr_to_level, Trainer *ptr_to_trainer) : id(id), level(level),
-                                                                                              ptr_to_level(ptr_to_level),
-                                                                                              ptr_to_trainer(ptr_to_trainer) {}
+Gladiator::Gladiator(int id, int level) : id(id), level(level) {}
 
 /*bool Gladiator::operator<(const Gladiator &gladiator2) const {
     if(id < gladiator2.id) return true;
@@ -17,6 +15,22 @@ Gladiator::Gladiator(int id, int level, Gladiator *ptr_to_level, Trainer *ptr_to
 }*/
 
 Trainer::Trainer(int id) : id(id) {}
+
+bool Trainer::operator<(const Trainer &trainer2) const {
+    return id < trainer2.id;
+}
+
+bool Trainer::operator>(const Trainer &trainer2) const {
+    return id > trainer2.id;
+}
+
+bool Trainer::operator==(const Trainer &trainer2) const {
+    return id == trainer2.id;
+}
+
+bool Trainer::operator!=(const Trainer &trainer2) const {
+    return !this==trainer2;
+}
 
 
 Colosseum::Colosseum() : num_gladiators(0), num_trainers(0){}
@@ -33,9 +47,9 @@ void Colosseum::buyGladiator(int gladiator_id, int trainer_id, int level) {
         throw InvalidParameter();
     }
     Trainer trainer = trainers_tree.find(Trainer(trainer_id));
-    trainer.gladiators.insert(Gladiator(gladiator_id, level, NULL, NULL));
-    Gladiator gladiator_level(gladiator_id, level, NULL, NULL);
-    gladiators_id_tree.insert(Gladiator(gladiator_id, level, &gladiator_level, &trainer));
+    trainer.gladiators.insert(GladiatorLevel(gladiator_id, level));
+    GladiatorLevel gladiator_level(gladiator_id, level);
+    gladiators_id_tree.insert(GladiatorID(gladiator_id, level, &gladiator_level, &trainer));
 
 }
 
@@ -45,3 +59,41 @@ void Colosseum::freeGladiator(int gladiator_id) {
     }
 
 }
+
+bool GladiatorID::operator<(const Gladiator &gladiator2) const {
+    return id < gladiator2.id;
+}
+
+bool GladiatorID::operator>(const Gladiator &gladiator2) const {
+    return id > gladiator2.id;
+}
+
+GladiatorID::GladiatorID(int id, int level, GladiatorLevel *ptr_to_level, Trainer *ptr_to_trainer) : Gladiator(id, level),
+                                                                                                     ptr_to_level(ptr_to_level),
+                                                                                                     ptr_to_trainer(ptr_to_trainer) {}
+
+bool Gladiator::operator==(const Gladiator &gladiator2) const {
+    return id == gladiator2.id;
+}
+
+bool Gladiator::operator!=(const Gladiator &gladiator2) const {
+    return !this == gladiator2;
+}
+
+bool GladiatorLevel::operator<(const Gladiator &gladiator2) const {
+    if(level < gladiator2.level) return true;
+    if(level == gladiator2.level){
+        return id < gladiator2.id;
+    }
+    return false;
+}
+
+bool GladiatorLevel::operator>(const Gladiator &gladiator2) const {
+    if(level > gladiator2.level) return true;
+    if(level == gladiator2.level){
+        return id > gladiator2.id;
+    }
+    return false;
+}
+
+GladiatorLevel::GladiatorLevel(int id, int level) : Gladiator(id, level){}

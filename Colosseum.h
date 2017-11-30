@@ -11,8 +11,8 @@ class Colosseum {
 private:
     int num_gladiators;
     int num_trainers;
-    SplayTree<Gladiator> gladiators_id_tree;
-    SplayTree<Gladiator> gladiators_level_tree;
+    SplayTree<GladiatorID> gladiators_id_tree;
+    SplayTree<GladiatorLevel> gladiators_level_tree;
     SplayTree<Trainer> trainers_tree;
 
     Colosseum(const Colosseum &colosseum);
@@ -31,18 +31,37 @@ public:
 };
 
 class Gladiator{
-private:
+public:
+    Gladiator() {};
+    Gladiator(int id, int level);
+    virtual ~Gladiator() {};
+
+protected:
     int id;
     int level;
-    Gladiator *ptr_to_level;
+    virtual bool operator<(const Gladiator &gladiator2) const = 0;
+    virtual bool operator>(const Gladiator &gladiator2) const = 0;
+    bool operator==(const Gladiator &gladiator2) const;
+    bool operator!=(const Gladiator &gladiator2) const;
+};
+
+class GladiatorID : public Gladiator{
+private:
+    GladiatorLevel *ptr_to_level;
     Trainer *ptr_to_trainer;
 public:
-    Gladiator(int id, int level, Gladiator *ptr_to_level, Trainer *ptr_to_trainer);
+    GladiatorID(int id, int level, GladiatorLevel *ptr_to_level, Trainer *ptr_to_trainer);
     ~Gladiator() {};
-    /*bool operator<(const Gladiator &gladiator2) const;
-    bool operator>(const Gladiator &gladiator2) const;
-    bool operator==(const Gladiator &gladiator2) const;
-    bool operator!=(const Gladiator &gladiator2) const;*/
+    bool operator<(const Gladiator &gladiator2) const override;
+    bool operator>(const Gladiator &gladiator2) const override;
+};
+
+class GladiatorLevel : public Gladiator{
+public:
+    GladiatorLevel(int id, int level);
+    ~Gladiator() {};
+    bool operator<(const Gladiator &gladiator2) const override;
+    bool operator>(const Gladiator &gladiator2) const override;
 };
 
 class Trainer {
@@ -54,10 +73,10 @@ private:
 public:
     explicit Trainer(int id);
     ~Trainer() {};
-    /*bool operator<(const Trainer &trainer2) const;
+    bool operator<(const Trainer &trainer2) const;
     bool operator>(const Trainer &trainer2) const;
     bool operator==(const Trainer &trainer2) const;
-    bool operator!=(const Trainer &trainer2) const;*/
+    bool operator!=(const Trainer &trainer2) const;
 };
 
 #endif //WET1_COLOSSEUM_H
