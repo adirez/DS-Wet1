@@ -4,7 +4,7 @@
 
 #include "Colosseum.h"
 
-Gladiator::Gladiator(int id, int level, Gladiator *ptr_to_level, Gladiator *ptr_to_trainer) : id(id), level(level),
+Gladiator::Gladiator(int id, int level, Gladiator *ptr_to_level, Trainer *ptr_to_trainer) : id(id), level(level),
                                                                                               ptr_to_level(ptr_to_level),
                                                                                               ptr_to_trainer(ptr_to_trainer) {}
 
@@ -34,8 +34,8 @@ void Colosseum::buyGladiator(int gladiator_id, int trainer_id, int level) {
     }
     Trainer trainer = trainers_tree.find(Trainer(trainer_id));
     trainer.gladiators.insert(Gladiator(gladiator_id, level, NULL, NULL));
-    gladiators_level_tree.insert(Gladiator(gladiator_id, level, NULL, NULL));
-    gladiators_id_tree.insert(Gladiator(gladiator_id, level, ));
+    Gladiator gladiator_level(gladiator_id, level, NULL, NULL);
+    gladiators_id_tree.insert(Gladiator(gladiator_id, level, &gladiator_level, &trainer));
 
 }
 

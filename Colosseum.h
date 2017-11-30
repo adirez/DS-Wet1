@@ -35,9 +35,9 @@ private:
     int id;
     int level;
     Gladiator *ptr_to_level;
-    Gladiator *ptr_to_trainer;
+    Trainer *ptr_to_trainer;
 public:
-    Gladiator(int id, int level, Gladiator *ptr_to_level, Gladiator *ptr_to_trainer);
+    Gladiator(int id, int level, Gladiator *ptr_to_level, Trainer *ptr_to_trainer);
     ~Gladiator() {};
     /*bool operator<(const Gladiator &gladiator2) const;
     bool operator>(const Gladiator &gladiator2) const;
@@ -48,7 +48,7 @@ public:
 class Trainer {
 private:
     int id;
-    SplayTree gladiators;
+    SplayTree<Gladiator> gladiators;
 
     friend class Colosseum;
 public:
