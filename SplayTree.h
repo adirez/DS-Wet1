@@ -5,7 +5,6 @@
 #ifndef WET1_SPLAYTREE_H
 #define WET1_SPLAYTREE_H
 
-#include <assert.h>
 #include "Exceptions.h"
 
 template<class T>
@@ -22,7 +21,7 @@ private:
         friend class SplayTree;
 
     public:
-        Node(T data, Node *parent);
+        Node(const T data, Node *parent);
 
         ~Node();
     };
@@ -31,6 +30,10 @@ private:
     Node *min;
     Node *max;
     int size;
+
+    //to make them unavailable to users (= delete does not work in g++)
+    SplayTree(const SplayTree &splay_tree);
+    SplayTree &operator=(const SplayTree &splay_tree);
 
     void splay(Node *node);
 
@@ -50,13 +53,9 @@ private:
 public:
     SplayTree();
 
-    SplayTree(const SplayTree &splay_tree) = delete;
-
-    SplayTree &operator=(const SplayTree &splay_tree) = delete;
-
     ~SplayTree();
 
-    T &find(const T &key);
+    const T &find(const T &key);
 
     void insert(const T &key);
 
@@ -79,16 +78,13 @@ SplayTree<T>::~SplayTree() {
 }
 
 template<class T>
-T &SplayTree<T>::find(const T &key) {
-    if (key == nullptr) {
-        throw NullParameter();
-    }
+const T &SplayTree<T>::find(const T &key) {
     Node *found_node = findAux(root, key);
     splay(found_node);
-    if (found_node->data != key) {
-        return nullptr;
+    if (*found_node->data != key) {
+        throw KeyNotFound();
     }
-    return found_node->data;
+    return *found_node->data;
 }
 
 template<class T>
@@ -97,9 +93,9 @@ void SplayTree<T>::insert(const T &key) {
     if (found_node != nullptr && key == *found_node->data) {
         throw KeyAlreadyExists();
     }
-    auto *to_insert = new Node(key, found_node);
+    Node *to_insert = new Node(key, found_node);
     if (found_node != nullptr) {
-        if(key < *found_node->data){
+        if (key < *found_node->data) {
             found_node->left_son = to_insert;
         } else {
             found_node->right_son = to_insert;
@@ -179,30 +175,29 @@ void SplayTree<T>::splay(SplayTree::Node *node) {
     while (node != root && node->parent != root) {
         Node *p = node->parent;
         Node *g = p->parent;
-         if ((*node->data < *p->data && *node->data > *g->data) ||
-             (*node->data > *p->data && *node->data < *g->data)) {
+        if ((*node->data < *p->data && *node->data > *g->data) ||
+            (*node->data > *p->data && *node->data < *g->data)) {
             zigZag(node);
         } else {
             zigZig(node);
         }
     }
-    if(node->parent == root && node->parent != nullptr){
+    if (node->parent == root && node->parent != nullptr) {
         zig(node);
     }
 }
 
 template<class T>
 void SplayTree<T>::zig(SplayTree::Node *node) {
-    assert(node->parent == root);
     if (root->left_son == node) {
         root->left_son = node->right_son;
-        if(node->right_son != nullptr){
+        if (node->right_son != nullptr) {
             root->left_son->parent = root;
         }
         node->right_son = root;
     } else {
         root->right_son = node->left_son;
-        if(node->left_son != nullptr){
+        if (node->left_son != nullptr) {
             root->right_son->parent = root;
         }
         node->left_son = root;
@@ -252,7 +247,7 @@ void SplayTree<T>::zigZag(SplayTree::Node *node) {
     if (g->parent != nullptr && *g->data < *g->parent->data) {
         //g was a left son
         g->parent->left_son = node;
-    } else if (g->parent != nullptr){
+    } else if (g->parent != nullptr) {
         g->parent->right_son = node;
     }
     p->parent = node;
@@ -302,7 +297,7 @@ void SplayTree<T>::zigZig(SplayTree::Node *node) {
     if (g->parent != nullptr && *g->data < *g->parent->data) {
         //g was a left son
         g->parent->left_son = node;
-    } else if (g->parent != nullptr){
+    } else if (g->parent != nullptr) {
         g->parent->right_son = node;
     }
     node->parent = g->parent;
@@ -323,7 +318,7 @@ template<class T>
 void SplayTree<T>::postOrderAuxRemoval(SplayTree::Node *cur_node) {
     if (cur_node == nullptr) return;
     postOrderAuxRemoval(cur_node->left_son);
-    postOrderAuxRemoval(cur_node->left_son);
+    postOrderAuxRemoval(cur_node->right_son);
     delete cur_node;
 }
 
@@ -352,8 +347,8 @@ typename SplayTree<T>::Node *SplayTree<T>::findAux(SplayTree::Node *cur_node, co
  */
 
 template<class T>
-SplayTree<T>::Node::Node(T data, Node *parent) : data(new T(data)), right_son(nullptr), left_son(nullptr),
-                                                 parent(parent) {}
+SplayTree<T>::Node::Node(const T data, Node *parent) : data(new T(data)), right_son(nullptr), left_son(nullptr),
+                                                       parent(parent) {}
 
 template<class T>
 SplayTree<T>::Node::~Node() {

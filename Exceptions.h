@@ -7,6 +7,7 @@
 
 
 #include <exception>
+#include <stdexcept>
 
 class SplayException : public std::exception{};
 
