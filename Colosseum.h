@@ -49,11 +49,9 @@ protected:
 class GladiatorID : public Gladiator{
 private:
     friend class Colosseum;
-    GladiatorLevel *ptr_to_level;
-    GladiatorLevel *ptr_to_self_in_trainer;
     Trainer *ptr_to_trainer;
 public:
-    GladiatorID(int id, int level, GladiatorLevel *ptr_to_level, Trainer *ptr_to_trainer, GladiatorLevel *ptr_to_self_in_trainer);
+    GladiatorID(int id, int level, Trainer *ptr_to_trainer);
     ~Gladiator() {};
     bool operator<(const Gladiator &gladiator2) const override;
     bool operator>(const Gladiator &gladiator2) const override;
@@ -71,7 +69,6 @@ class Trainer {
 private:
     int id;
     SplayTree<GladiatorLevel> gladiators;
-
     friend class Colosseum;
 public:
     explicit Trainer(int id);

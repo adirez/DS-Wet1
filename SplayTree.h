@@ -38,8 +38,8 @@ private:
     void zig(Node *node);
     void zigZag(Node *node);
     void zigZig(Node *node);
-    template<class function>
-    void inOrderAux(Node *cur_node, const function &func) const;
+    template<class do_something>
+    void inOrderAux(Node *cur_node, const do_something &func) const;
     void postOrderAuxRemoval(Node *cur_node);
     Node *findAux(Node *cur_node, const T& key);
     void join(Node *left_tree, Node *right_tree);
@@ -50,8 +50,8 @@ public:
     const T &find(const T &key);
     void insert(const T &key);
     void remove(const T &key);
-    template<class function>
-    void inOrder(const function &func) const;
+    template<class do_something>
+    void inOrder(const do_something &func) const;
     T &getMin();
 };
 
@@ -162,8 +162,8 @@ void SplayTree<T>::join(Node *left_tree, Node *right_tree){
 }
 
 template<class T>
-template<class function>
-void SplayTree<T>::inOrder(const function &func) const {
+template<class do_something>
+void SplayTree<T>::inOrder(const do_something &func) const {
     inOrderAux(root, func);
 }
 template<class T>
@@ -310,8 +310,8 @@ void SplayTree<T>::zigZig(SplayTree::Node *node) {
 }
 
 template<class T>
-template<class function>
-void SplayTree<T>::inOrderAux(SplayTree::Node *cur_node, const function &func) const {
+template<class do_something>
+void SplayTree<T>::inOrderAux(SplayTree::Node *cur_node, const do_something &func) const {
     if (cur_node == NULL) return;
 
     inOrderAux(cur_node->left_son, func);
