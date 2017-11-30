@@ -48,20 +48,17 @@ protected:
 
 class GladiatorID : public Gladiator{
 private:
-    friend class Colosseum;
     GladiatorLevel *ptr_to_level;
     GladiatorLevel *ptr_to_self_in_trainer;
     Trainer *ptr_to_trainer;
 public:
-    GladiatorID(int id, int level, GladiatorLevel *ptr_to_level, Trainer *ptr_to_trainer);
+    GladiatorID(int id, int level, GladiatorLevel *ptr_to_level, Trainer *ptr_to_trainer, GladiatorLevel *ptr_to_self_in_trainer);
     ~Gladiator() {};
     bool operator<(const Gladiator &gladiator2) const override;
     bool operator>(const Gladiator &gladiator2) const override;
 };
 
 class GladiatorLevel : public Gladiator{
-private:
-    friend class Colosseum;
 public:
     GladiatorLevel(int id, int level);
     ~Gladiator() {};

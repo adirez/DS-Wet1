@@ -52,6 +52,7 @@ public:
     void remove(const T &key);
     template<class function>
     void inOrder(const function &func) const;
+    T &getMin();
 };
 
 /**
@@ -164,6 +165,10 @@ template<class T>
 template<class function>
 void SplayTree<T>::inOrder(const function &func) const {
     inOrderAux(root, func);
+}
+template<class T>
+T &SplayTree::getMin(){
+    return min;
 }
 
 /**
