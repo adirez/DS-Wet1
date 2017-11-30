@@ -57,8 +57,22 @@ void Colosseum::freeGladiator(int gladiator_id) {
     if(gladiator_id <= 0){
         throw InvalidParameter();
     }
-
 }
+
+void Colosseum::levelUp(int gladiator_id, int level_inc) {
+    if (gladiator_id <= 0 || level_inc <= 0) {
+        throw InvalidParameter();
+    }
+    GladiatorID gladiator_by_id = gladiators_id_tree.find(GladiatorID(gladiator_id, 0, NULL, NULL));
+
+    gladiators_level_tree.remove(GladiatorLevel(gladiator_id, 0));
+    gladiator_by_id.ptr_to_trainer->gladiators.remove(GladiatorLevel(gladiator_id, 0));
+    gladiator_by_id.level += level_inc;
+
+    gladiators_level_tree.insert(GladiatorLevel(gladiator_id, gladiator_by_id.level));
+    gladiator_by_id.ptr_to_trainer->gladiators.insert(GladiatorLevel(gladiator_id, gladiator_by_id.level));
+}
+
 
 bool GladiatorID::operator<(const Gladiator &gladiator2) const {
     return id < gladiator2.id;

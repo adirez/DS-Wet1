@@ -37,6 +37,7 @@ public:
     virtual ~Gladiator() {};
 
 protected:
+    friend class Colosseum;
     int id;
     int level;
     virtual bool operator<(const Gladiator &gladiator2) const = 0;
@@ -47,7 +48,9 @@ protected:
 
 class GladiatorID : public Gladiator{
 private:
+    friend class Colosseum;
     GladiatorLevel *ptr_to_level;
+    GladiatorLevel *ptr_to_self_in_trainer;
     Trainer *ptr_to_trainer;
 public:
     GladiatorID(int id, int level, GladiatorLevel *ptr_to_level, Trainer *ptr_to_trainer);
@@ -57,6 +60,8 @@ public:
 };
 
 class GladiatorLevel : public Gladiator{
+private:
+    friend class Colosseum;
 public:
     GladiatorLevel(int id, int level);
     ~Gladiator() {};
@@ -67,7 +72,7 @@ public:
 class Trainer {
 private:
     int id;
-    SplayTree<Gladiator> gladiators;
+    SplayTree<GladiatorLevel> gladiators;
 
     friend class Colosseum;
 public:
