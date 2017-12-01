@@ -90,65 +90,6 @@ public:
     }
 };
 
-Gladiator::Gladiator(int id, int level) : id(id), level(level) {}
-
-Trainer::Trainer(int id) : id(id) {}
-
-GladiatorID::GladiatorID(int id, int level, Trainer *ptr_to_trainer) : Gladiator(id, level), ptr_to_trainer(ptr_to_trainer) {}
-
-GladiatorID::GladiatorID(int id, int level) : Gladiator(id, level) {}
-
-bool Trainer::operator<(const Trainer &trainer2) const {
-    return id < trainer2.id;
-}
-
-bool Trainer::operator>(const Trainer &trainer2) const {
-    return id > trainer2.id;
-}
-
-bool Trainer::operator==(const Trainer &trainer2) const {
-    return id == trainer2.id;
-}
-
-bool Trainer::operator!=(const Trainer &trainer2) const {
-    return !this==trainer2;
-}
-
-
-bool GladiatorID::operator<(const Gladiator &gladiator2) const {
-    return id < gladiator2.id;
-}
-
-bool GladiatorID::operator>(const Gladiator &gladiator2) const {
-    return id > gladiator2.id;
-}
-
-bool Gladiator::operator==(const Gladiator &gladiator2) const {
-    return id == gladiator2.id;
-}
-
-bool Gladiator::operator!=(const Gladiator &gladiator2) const {
-    return !this == gladiator2;
-}
-
-bool GladiatorLevel::operator<(const Gladiator &gladiator2) const {
-    if(level < gladiator2.level) return true;
-    if(level == gladiator2.level){
-        return id > gladiator2.id;
-    }
-    return false;
-}
-
-bool GladiatorLevel::operator>(const Gladiator &gladiator2) const {
-    if(level > gladiator2.level) return true;
-    if(level == gladiator2.level){
-        return id < gladiator2.id;
-    }
-    return false;
-}
-
-GladiatorLevel::GladiatorLevel(int id, int level) : Gladiator(id, level) {}
-
 Colosseum::Colosseum() : num_gladiators(0), num_trainers(0){}
 
 void Colosseum::addTrainer(int trainer_id) {

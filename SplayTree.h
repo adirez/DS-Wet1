@@ -179,11 +179,11 @@ void SplayTree<T>::inOrderReverse(const do_something &func) const {
 }
 
 template<class T>
-T &SplayTree::getMin(){
-    return min;
+T &SplayTree<T>::getMin(){
+    return min->data;
 }
-
-int SplayTree::getSize(){
+template<class T>
+int SplayTree<T>::getSize(){
     return size;
 }
 
