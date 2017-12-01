@@ -32,8 +32,9 @@ private:
     int size;
 
     //to make them unavailable to users (= delete does not work in g++)
-    SplayTree(const SplayTree &splay_tree);
     SplayTree &operator=(const SplayTree &splay_tree);
+    SplayTree(const SplayTree &splay_tree);
+
     void splay(Node *node);
     void zig(Node *node);
     void zigZag(Node *node);

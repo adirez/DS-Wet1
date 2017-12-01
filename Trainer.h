@@ -21,6 +21,7 @@ private:
 public:
     explicit Trainer(int id);
     ~Trainer();
+    Trainer(const Trainer& trainer);
     bool operator<(const Trainer &trainer2) const;
     bool operator>(const Trainer &trainer2) const;
 };

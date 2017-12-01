@@ -117,6 +117,7 @@ void Colosseum::addTrainer(int trainer_id) {
         throw InvalidParameter();
     }
     trainers_tree->insert(Trainer(trainer_id));
+    num_trainers++;
 }
 
 void Colosseum::buyGladiator(int gladiator_id, int trainer_id, int level) {
@@ -127,6 +128,7 @@ void Colosseum::buyGladiator(int gladiator_id, int trainer_id, int level) {
     trainer.gladiators->insert(GladiatorLevel(gladiator_id, level));
     gladiators_level_tree->insert(GladiatorLevel(gladiator_id, level));
     gladiators_id_tree->insert(GladiatorID(gladiator_id, level, &trainer));
+    num_gladiators++;
 }
 
 void Colosseum::freeGladiator(int gladiator_id) {
