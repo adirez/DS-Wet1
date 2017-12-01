@@ -3,6 +3,28 @@
 //
 
 #include "Colosseum.h"
+#include <cstdlib>
+
+class GladiatorsByLevel {
+private:
+    int index;
+    int size;
+    int *gladiators_ids;
+
+    friend class Colosseum;
+public:
+    GladiatorsByLevel(int size, int **gladiators_ids) : index(0), size(size), gladiators_ids(*gladiators_ids) {
+       this->gladiators_ids = (int*)malloc(size * sizeof(int));
+        if (NULL == this->gladiators_ids) {
+            throw MemoryProblem();
+        }
+    }
+    ~GladiatorsByLevel() {} //we don't want the default destructor so it will not delete the array
+    void operator()(const Gladiator gladiator) {
+        gladiators_ids[index] = gladiator.getID();
+        index++;
+    }
+};
 
 static Gladiator** merge(Gladiator** array1, Gladiator** array2, int size){
     int j = 0, k = 0;
@@ -177,6 +199,19 @@ int Colosseum::getTopGladiator(int trainer_id) {
     }
     Trainer trainer = trainers_tree.find(Trainer(trainer_id));
     return trainer.gladiators.getMin().id;
+}
+void Colosseum::getAllGladiatorsByLevel(int trainer_id, int *numOfGladiators, int **gladiators) {
+    if (trainer_id < 0) {
+        *numOfGladiators = num_gladiators;
+        GladiatorsByLevel gladiatorsByLevel(*numOfGladiators, gladiators);
+        gladiators_level_tree.inOrderReverse(gladiatorsByLevel);
+        return;
+    }
+
+    Trainer trainer = trainers_tree.find(Trainer(trainer_id));
+    *numOfGladiators = trainer.gladiators.getSize();
+    GladiatorsByLevel gladiatorsByLevel(*numOfGladiators, gladiators);
+    trainer.gladiators.inOrderReverse(gladiatorsByLevel);
 }
 
 void Colosseum::updateGladiator(int gladiator_id, int upgrade_id) {

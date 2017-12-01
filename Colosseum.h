@@ -25,7 +25,7 @@ public:
     void freeGladiator(int gladiator_id);
     void levelUp(int gladiator_id, int level_inc);
     int getTopGladiator(int trainer_id);
-    int* getAllGladiatorsByLevel(int trainer_id, int *numOfGladiators);
+    void getAllGladiatorsByLevel(int trainer_id, int *numOfGladiators, int **gladiators);
     void updateGladiator(int gladiator_id, int upgrade_id);
     void updateLevels(int stimulantCode, int stimulantFactor);
 };
@@ -35,6 +35,7 @@ public:
     Gladiator() {};
     Gladiator(int id, int level);
     virtual ~Gladiator() {};
+    int getID() const;
 
 protected:
     friend class Stimulant;
@@ -57,6 +58,9 @@ public:
     ~Gladiator() {};
     bool operator<(const Gladiator &gladiator2) const override;
     bool operator>(const Gladiator &gladiator2) const override;
+    int Gladiator :: getID() const {
+        return id;
+    }
 };
 
 class GladiatorLevel : public Gladiator{
