@@ -5,17 +5,17 @@
 #include "GladiatorLevel.h"
 
 bool GladiatorLevel::operator<(const Gladiator &gladiator2) const {
-    if(getLevel() < gladiator2.getLevel()) return true;
-    if(getLevel() == gladiator2.getLevel()){
-        return getID() > gladiator2.getID();
+    if(level < gladiator2.getLevel()) return true;
+    if(level == gladiator2.getLevel()){
+        return id > gladiator2.getID();
     }
     return false;
 }
 
 bool GladiatorLevel::operator>(const Gladiator &gladiator2) const {
-    if(getLevel() > gladiator2.getLevel()) return true;
-    if(getLevel() == gladiator2.getLevel()){
-        return getID() < gladiator2.getID();
+    if(level > gladiator2.getLevel()) return true;
+    if(level == gladiator2.getLevel()){
+        return id < gladiator2.getID();
     }
     return false;
 }

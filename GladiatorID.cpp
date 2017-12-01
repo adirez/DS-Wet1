@@ -10,11 +10,11 @@ GladiatorID::GladiatorID(int id, int level, Trainer *ptr_to_trainer) : Gladiator
 GladiatorID::GladiatorID(int id, int level) : Gladiator(id, level) {}
 
 bool GladiatorID::operator<(const Gladiator &gladiator2) const {
-    return getID() < gladiator2.getID();
+    return id < gladiator2.getID();
 }
 
 bool GladiatorID::operator>(const Gladiator &gladiator2) const {
-    return getID() > gladiator2.getID();
+    return id > gladiator2.getID();
 }
 
 int GladiatorID::getID() const {
