@@ -53,6 +53,7 @@ private:
     Trainer *ptr_to_trainer;
 public:
     GladiatorID(int id, int level, Trainer *ptr_to_trainer);
+    GladiatorID(int id, int level);
     ~Gladiator() {};
     bool operator<(const Gladiator &gladiator2) const override;
     bool operator>(const Gladiator &gladiator2) const override;
