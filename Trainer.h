@@ -12,8 +12,6 @@ class Trainer {
 private:
     int id;
     SplayTree<GladiatorLevel> *gladiators;
-
-    Trainer(const Trainer& trainer);
     Trainer &operator=(const Trainer &trainer);
 
     friend class Colosseum;
@@ -26,6 +24,8 @@ public:
     ~Trainer();
     bool operator<(const Trainer &trainer2) const;
     bool operator>(const Trainer &trainer2) const;
+
+    Trainer(const Trainer& trainer);
 };
 
 bool operator==(const Trainer &trainer1, const Trainer &trainer2);

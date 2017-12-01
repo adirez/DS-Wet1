@@ -124,7 +124,7 @@ void Colosseum::buyGladiator(int gladiator_id, int trainer_id, int level) {
     if (gladiator_id <= 0 || trainer_id <= 0 || level <= 0) {
         throw InvalidParameter();
     }
-    Trainer trainer = trainers_tree->find(trainer_id);
+    Trainer trainer(trainers_tree->find(trainer_id));
     trainer.gladiators->insert(GladiatorLevel(gladiator_id, level), gladiator_id);
     gladiators_level_tree->insert(GladiatorLevel(gladiator_id, level), gladiator_id);
     gladiators_id_tree->insert(GladiatorID(gladiator_id, level, &trainer), gladiator_id);
