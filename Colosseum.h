@@ -72,6 +72,7 @@ private:
     int id;
     SplayTree<GladiatorLevel> gladiators;
     friend class Colosseum;
+    friend class StimulantTrainers;
 public:
     explicit Trainer(int id);
     ~Trainer() {};
