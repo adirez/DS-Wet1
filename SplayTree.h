@@ -332,7 +332,7 @@ void SplayTree<T>::inOrderAux(SplayTree::Node *cur_node, do_something &func) {
     if (cur_node == NULL) return;
 
     inOrderAux(cur_node->left_son, func);
-    func(*cur_node->data);
+    func(cur_node->data);
     inOrderAux(cur_node->right_son, func);
 }
 
@@ -342,7 +342,7 @@ void SplayTree<T>::inOrderAuxReverese(Node *cur_node, do_something &func) {
     if (cur_node == NULL) return;
 
     inOrderAux(cur_node->right_son, func);
-    func(*cur_node->data);
+    func(cur_node->data);
     inOrderAux(cur_node->left_son, func);
 }
 

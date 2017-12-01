@@ -9,7 +9,7 @@
 using std::cout;
 using std::endl;
 
-void *init() {
+void *Init() {
     Colosseum *DS;
     try {
         DS = new Colosseum();

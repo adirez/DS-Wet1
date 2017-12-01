@@ -12,25 +12,27 @@ private:
     int *gladiators_ids;
 
     friend class Colosseum;
+
 public:
     GladiatorsByLevel(int size, int **gladiators_ids) : index(0), size(size), gladiators_ids(*gladiators_ids) {
-       this->gladiators_ids = (int*)malloc(size * sizeof(int));
+        this->gladiators_ids = (int *) malloc(size * sizeof(int));
         if (NULL == this->gladiators_ids) {
             throw MemoryProblem();
         }
     }
+
     ~GladiatorsByLevel() {} //we don't want the default destructor so it will not delete the array
-    void operator()(const GladiatorID gladiator) {
-        gladiators_ids[index] = gladiator.getID();
+    void operator()(GladiatorLevel* gladiator) {
+        gladiators_ids[index] = gladiator->getID();
         index++;
     }
 };
 
-static Gladiator** merge(Gladiator** array1, Gladiator** array2, int size){
+static Gladiator **merge(Gladiator **array1, Gladiator **array2, int size) {
     int j = 0, k = 0;
-    Gladiator **merged_array = new Gladiator*[size];
-    for(int i=0; i < size; ++i){
-        if(array1[j] < array2[k]){
+    Gladiator **merged_array = new Gladiator *[size];
+    for (int i = 0; i < size; ++i) {
+        if (array1[j] < array2[k]) {
             merged_array[i] = array1[j];
             j++;
         } else {
@@ -51,19 +53,24 @@ private:
     int j;
 
     friend class Colosseum;
+
     friend class StimulantTrainers;
+
 public:
     Stimulant(int stimulant_code, int stimulant_factor, int num_of_gladiators) : stimulant_code(stimulant_code),
-                                                                                 stimulant_factor(stimulant_factor), i(0), j(0){
-        gladiators1 = new Gladiator*[num_of_gladiators];
-        gladiators2 = new Gladiator*[num_of_gladiators];
+                                                                                 stimulant_factor(stimulant_factor),
+                                                                                 i(0), j(0) {
+        gladiators1 = new Gladiator *[num_of_gladiators];
+        gladiators2 = new Gladiator *[num_of_gladiators];
     }
+
     ~Stimulant() {
         delete gladiators1;
         delete gladiators2;
     }
+
     void operator()(Gladiator *gladiator) {
-        if(gladiator->id % stimulant_code == 0){
+        if (gladiator->id % stimulant_code == 0) {
             gladiators1[i] = gladiator;
             i++;
         } else {
@@ -73,24 +80,27 @@ public:
     }
 };
 
-class StimulantTrainers{
+class StimulantTrainers {
 private:
     Stimulant stimulant;
 public:
     explicit StimulantTrainers(const Stimulant &stimulant) : stimulant(stimulant) {}
+
+    ~StimulantTrainers() {}
+
     void operator()(const Trainer &trainer) {
         int size = trainer.gladiators->getSize();
         trainer.gladiators->inOrder(stimulant);
         delete trainer.gladiators;
-        Gladiator** merged_array = merge(stimulant.gladiators1, stimulant.gladiators2, size);
+        Gladiator **merged_array = merge(stimulant.gladiators1, stimulant.gladiators2, size);
         for (int i = 0; i < size; ++i) {
-            GladiatorLevel *gladiatorLevel = dynamic_cast<GladiatorLevel*>(merged_array[i]);
+            GladiatorLevel *gladiatorLevel = dynamic_cast<GladiatorLevel *>(merged_array[i]);
             trainer.gladiators->insert(*gladiatorLevel);
         }
     }
 };
 
-Colosseum::Colosseum() : num_gladiators(0), num_trainers(0){
+Colosseum::Colosseum() : num_gladiators(0), num_trainers(0) {
     gladiators_id_tree = new SplayTree<GladiatorID>;
     gladiators_level_tree = new SplayTree<GladiatorLevel>;
     trainers_tree = new SplayTree<Trainer>;
@@ -103,14 +113,14 @@ Colosseum::~Colosseum() {
 }
 
 void Colosseum::addTrainer(int trainer_id) {
-    if(trainer_id <= 0){
+    if (trainer_id <= 0) {
         throw InvalidParameter();
     }
     trainers_tree->insert(Trainer(trainer_id));
 }
 
 void Colosseum::buyGladiator(int gladiator_id, int trainer_id, int level) {
-    if(gladiator_id <= 0 || trainer_id <= 0 || level <=0){
+    if (gladiator_id <= 0 || trainer_id <= 0 || level <= 0) {
         throw InvalidParameter();
     }
     Trainer trainer = trainers_tree->find(Trainer(trainer_id));
@@ -120,7 +130,7 @@ void Colosseum::buyGladiator(int gladiator_id, int trainer_id, int level) {
 }
 
 void Colosseum::freeGladiator(int gladiator_id) {
-    if(gladiator_id <= 0){
+    if (gladiator_id <= 0) {
         throw InvalidParameter();
     }
     GladiatorID to_delete = gladiators_id_tree->find(GladiatorID(gladiator_id, 0));
@@ -145,13 +155,14 @@ void Colosseum::levelUp(int gladiator_id, int level_inc) {
 }
 
 int Colosseum::getTopGladiator(int trainer_id) {
-    if(trainer_id < 0){
+    if (trainer_id < 0) {
         GladiatorLevel gladiatorLevel = gladiators_level_tree->getMin();
         return gladiatorLevel.getID();
     }
     Trainer trainer = trainers_tree->find(Trainer(trainer_id));
     return trainer.gladiators->getMin().getID();
 }
+
 void Colosseum::getAllGladiatorsByLevel(int trainer_id, int *numOfGladiators, int **gladiators) {
     if (trainer_id < 0) {
         *numOfGladiators = num_gladiators;
@@ -167,7 +178,7 @@ void Colosseum::getAllGladiatorsByLevel(int trainer_id, int *numOfGladiators, in
 }
 
 void Colosseum::updateGladiator(int gladiator_id, int upgrade_id) {
-    if(gladiator_id <= 0 || upgrade_id <= 0){
+    if (gladiator_id <= 0 || upgrade_id <= 0) {
         throw InvalidParameter();
     }
     GladiatorID to_upgrade = gladiators_id_tree->find(GladiatorID(gladiator_id, 0));
@@ -182,24 +193,24 @@ void Colosseum::updateGladiator(int gladiator_id, int upgrade_id) {
 }
 
 void Colosseum::updateLevels(int stimulantCode, int stimulantFactor) {
-    if(stimulantCode < 1 || stimulantFactor < 1){
+    if (stimulantCode < 1 || stimulantFactor < 1) {
         throw InvalidParameter();
     }
     Stimulant stimulant(stimulantCode, stimulantFactor, num_gladiators);
     gladiators_id_tree->inOrder(stimulant);
     delete gladiators_id_tree;
-    Gladiator** merged_array = merge(stimulant.gladiators1, stimulant.gladiators2, num_gladiators);
+    Gladiator **merged_array = merge(stimulant.gladiators1, stimulant.gladiators2, num_gladiators);
     for (int i = 0; i < num_gladiators; ++i) {
-        GladiatorID *gladiatorID = dynamic_cast<GladiatorID*>(merged_array[i]);
+        GladiatorID *gladiatorID = dynamic_cast<GladiatorID *>(merged_array[i]);
         gladiators_id_tree->insert(*gladiatorID);
     }
 
     Stimulant stimulant1(stimulantCode, stimulantFactor, num_gladiators);
     gladiators_level_tree->inOrder(stimulant1);
     delete gladiators_level_tree;
-    Gladiator** merged_array1 = merge(stimulant1.gladiators1, stimulant1.gladiators2, num_gladiators);
+    Gladiator **merged_array1 = merge(stimulant1.gladiators1, stimulant1.gladiators2, num_gladiators);
     for (int i = 0; i < num_gladiators; ++i) {
-        GladiatorLevel *gladiatorLevel = dynamic_cast<GladiatorLevel*>(merged_array1[i]);
+        GladiatorLevel *gladiatorLevel = dynamic_cast<GladiatorLevel *>(merged_array1[i]);
         gladiators_level_tree->insert(*gladiatorLevel);
     }
 
