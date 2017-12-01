@@ -18,6 +18,10 @@ bool GladiatorID::operator>(const Gladiator &gladiator2) const {
     return id > gladiator2.id;
 }
 
+int GladiatorID :: GetID() {
+    return Gladiator :: getID();
+}
+
 bool Gladiator::operator==(const Gladiator &gladiator2) const {
     return id == gladiator2.id;
 }
@@ -44,6 +48,10 @@ bool GladiatorLevel::operator>(const Gladiator &gladiator2) const {
         return id < gladiator2.id;
     }
     return false;
+}
+
+int GladiatorLevel :: GetID() {
+    return Gladiator :: getID();
 }
 
 GladiatorLevel::GladiatorLevel(int id, int level) : Gladiator(id, level) {}

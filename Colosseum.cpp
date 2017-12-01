@@ -20,7 +20,7 @@ public:
         }
     }
     ~GladiatorsByLevel() {} //we don't want the default destructor so it will not delete the array
-    void operator()(const Gladiator gladiator) {
+    void operator()(const GladiatorID gladiator) {
         gladiators_ids[index] = gladiator.getID();
         index++;
     }

@@ -34,6 +34,7 @@ public:
     GladiatorID(int id, int level, Trainer *ptr_to_trainer);
     GladiatorID(int id, int level);
     ~GladiatorID() {};
+    int GetID();
     bool operator<(const Gladiator &gladiator2) const;
     bool operator>(const Gladiator &gladiator2) const;
 };
@@ -42,6 +43,7 @@ class GladiatorLevel : public Gladiator{
 public:
     GladiatorLevel(int id, int level);
     ~GladiatorLevel() {};
+    int GetID();
     bool operator<(const Gladiator &gladiator2) const;
     bool operator>(const Gladiator &gladiator2) const;
 };
