@@ -11,6 +11,8 @@
 class GladiatorID : public Gladiator {
 private:
     Trainer *ptr_to_trainer;
+
+    friend class Colosseum;
 public:
     GladiatorID(int id, int level, Trainer *ptr_to_trainer);
     GladiatorID(int id, int level);

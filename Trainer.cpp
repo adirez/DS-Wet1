@@ -20,10 +20,9 @@ bool Trainer::operator>(const Trainer &trainer2) const {
     return id > trainer2.id;
 }
 
-bool Trainer::operator==(const Trainer &trainer2) const {
-    return id == trainer2.id;
+bool operator==(const Trainer &trainer1, const Trainer &trainer2){
+    return trainer1.id == trainer2.id;
 }
-
-bool Trainer::operator!=(const Trainer &trainer2) const {
-    return !this==trainer2;
+bool operator!=(const Trainer &trainer1, const Trainer &trainer2){
+    return !(trainer1 == trainer2);
 }

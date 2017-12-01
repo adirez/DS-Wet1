@@ -15,14 +15,17 @@ private:
 
     friend class Colosseum;
     friend class StimulantTrainers;
+
+    friend bool operator==(const Trainer &trainer1, const Trainer &trainer2);
+    friend bool operator!=(const Trainer &trainer1, const Trainer &trainer2);
 public:
     explicit Trainer(int id);
     ~Trainer();
     bool operator<(const Trainer &trainer2) const;
     bool operator>(const Trainer &trainer2) const;
-    bool operator==(const Trainer &trainer2) const;
-    bool operator!=(const Trainer &trainer2) const;
 };
 
+bool operator==(const Trainer &trainer1, const Trainer &trainer2);
+bool operator!=(const Trainer &trainer1, const Trainer &trainer2);
 
 #endif //WET1_TRAINER_H

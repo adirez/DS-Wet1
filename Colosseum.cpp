@@ -62,12 +62,12 @@ public:
         delete gladiators1;
         delete gladiators2;
     }
-    void operator()(Gladiator &gladiator) {
-        if(gladiator.id % stimulant_code == 0){
-            gladiators1[i] = &gladiator;
+    void operator()(Gladiator *gladiator) {
+        if(gladiator->id % stimulant_code == 0){
+            gladiators1[i] = gladiator;
             i++;
         } else {
-            gladiators2[j] = &gladiator;
+            gladiators2[j] = gladiator;
             j++;
         }
     }
@@ -146,10 +146,11 @@ void Colosseum::levelUp(int gladiator_id, int level_inc) {
 
 int Colosseum::getTopGladiator(int trainer_id) {
     if(trainer_id < 0){
-        return gladiators_level_tree->getMin().id;
+        GladiatorLevel gladiatorLevel = gladiators_level_tree->getMin();
+        return gladiatorLevel.getID();
     }
     Trainer trainer = trainers_tree->find(Trainer(trainer_id));
-    return trainer.gladiators->getMin().id;
+    return trainer.gladiators->getMin().getID();
 }
 void Colosseum::getAllGladiatorsByLevel(int trainer_id, int *numOfGladiators, int **gladiators) {
     if (trainer_id < 0) {

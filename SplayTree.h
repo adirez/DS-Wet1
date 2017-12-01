@@ -39,9 +39,9 @@ private:
     void zigZag(Node *node);
     void zigZig(Node *node);
     template<class do_something>
-    void inOrderAux(Node *cur_node, const do_something &func) const;
+    void inOrderAux(Node *cur_node, do_something &func);
     template<class do_something>
-    void inOrderAuxReverese(Node *cur_node, const do_something &func) const;
+    void inOrderAuxReverese(Node *cur_node, do_something &func);
     void postOrderAuxRemoval(Node *cur_node);
     Node *findAux(Node *cur_node, const T& key);
     void join(Node *left_tree, Node *right_tree);
@@ -53,9 +53,9 @@ public:
     void insert(const T &key);
     void remove(const T &key);
     template<class do_something>
-    void inOrder(const do_something &func) const;
+    void inOrder(do_something &func);
     template<class do_something>
-    void inOrderReverse(const do_something &func) const;
+    void inOrderReverse(do_something &func);
     T &getMin();
     int getSize();
 };
@@ -168,23 +168,23 @@ void SplayTree<T>::join(Node *left_tree, Node *right_tree){
 
 template<class T>
 template<class do_something>
-void SplayTree<T>::inOrder(const do_something &func) const {
+void SplayTree<T>::inOrder(do_something &func) {
     inOrderAux(root, func);
 }
 
 template<class T>
 template<class do_something>
-void SplayTree<T>::inOrderReverse(const do_something &func) const {
+void SplayTree<T>::inOrderReverse(do_something &func) {
     inOrderAux(root, func);
 }
 
 template<class T>
-T &SplayTree<T>::getMin(){
-    return min->data;
+T &SplayTree<T>::getMin() {
+    return *min->data;
 }
 
 template<class T>
-int SplayTree<T>::getSize(){
+int SplayTree<T>::getSize() {
     return size;
 }
 
@@ -328,7 +328,7 @@ void SplayTree<T>::zigZig(SplayTree::Node *node) {
 
 template<class T>
 template<class do_something>
-void SplayTree<T>::inOrderAux(SplayTree::Node *cur_node, const do_something &func) const {
+void SplayTree<T>::inOrderAux(SplayTree::Node *cur_node, do_something &func) {
     if (cur_node == NULL) return;
 
     inOrderAux(cur_node->left_son, func);
@@ -338,7 +338,7 @@ void SplayTree<T>::inOrderAux(SplayTree::Node *cur_node, const do_something &fun
 
 template<class T>
 template<class do_something>
-void SplayTree<T>::inOrderAuxReverese(Node *cur_node, const do_something &func) const {
+void SplayTree<T>::inOrderAuxReverese(Node *cur_node, do_something &func) {
     if (cur_node == NULL) return;
 
     inOrderAux(cur_node->right_son, func);

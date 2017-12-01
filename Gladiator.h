@@ -6,12 +6,6 @@
 #define WET1_GLADIATOR_H
 
 class Gladiator{
-public:
-    Gladiator() : id(0), level(0) {}
-    Gladiator(int id, int level);
-    virtual ~Gladiator() {};
-    int getID() const;
-
 protected:
     friend class Stimulant;
     friend class Colosseum;
@@ -22,9 +16,14 @@ protected:
     virtual bool operator>(const Gladiator &gladiator2) const = 0;
 
 public:
-    bool operator==(const Gladiator &gladiator2) const;
-    bool operator!=(const Gladiator &gladiator2) const;
+    Gladiator() : id(0), level(0) {}
+    Gladiator(int id, int level);
+    virtual ~Gladiator() {};
+    int getID() const;
 };
+
+bool operator==(const Gladiator &gladiator1, const Gladiator &gladiator2);
+bool operator!=(const Gladiator &gladiator1, const Gladiator &gladiator2);
 
 
 #endif //WET1_GLADIATOR_H
