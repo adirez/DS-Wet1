@@ -13,6 +13,9 @@ private:
     int id;
     SplayTree<GladiatorLevel> *gladiators;
 
+    Trainer(const Trainer& trainer);
+    Trainer &operator=(const Trainer &trainer);
+
     friend class Colosseum;
     friend class StimulantTrainers;
 
@@ -21,7 +24,6 @@ private:
 public:
     explicit Trainer(int id);
     ~Trainer();
-    Trainer(const Trainer& trainer);
     bool operator<(const Trainer &trainer2) const;
     bool operator>(const Trainer &trainer2) const;
 };

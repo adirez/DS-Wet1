@@ -26,7 +26,3 @@ bool operator==(const Trainer &trainer1, const Trainer &trainer2){
 bool operator!=(const Trainer &trainer1, const Trainer &trainer2){
     return !(trainer1 == trainer2);
 }
-
-Trainer::Trainer(const Trainer &trainer) : id(trainer.id){
-    gladiators = new SplayTree<GladiatorLevel>;
-}

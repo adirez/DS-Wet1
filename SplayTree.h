@@ -15,6 +15,7 @@ private:
     class Node {
     private:
         T *data;
+        int key;
         Node *parent;
         Node *right_son;
         Node *left_son;
@@ -22,7 +23,7 @@ private:
         friend class SplayTree;
 
     public:
-        Node(const T data, Node *parent);
+        Node(const T data, int key, Node *parent);
         ~Node();
     };
 
@@ -44,15 +45,15 @@ private:
     template<class do_something>
     void inOrderAuxReverese(Node *cur_node, do_something &func);
     void postOrderAuxRemoval(Node *cur_node);
-    Node *findAux(Node *cur_node, const T& key);
+    Node *findAux(Node *cur_node, int key);
     void join(Node *left_tree, Node *right_tree);
 
 public:
     SplayTree();
     ~SplayTree();
-    const T &find(const T &key);
-    void insert(const T &key);
-    void remove(const T &key);
+    const T &find(int key);
+    void insert(const T &data, int key);
+    void remove(int key);
     template<class do_something>
     void inOrder(do_something &func);
     template<class do_something>
@@ -75,24 +76,24 @@ SplayTree<T>::~SplayTree() {
 }
 
 template<class T>
-const T &SplayTree<T>::find(const T &key) {
+const T &SplayTree<T>::find(int key) {
     Node *found_node = findAux(root, key);
     splay(found_node);
-    if (*found_node->data != key) {
+    if (found_node->key != key) {
         throw KeyNotFound();
     }
     return *found_node->data;
 }
 
 template<class T>
-void SplayTree<T>::insert(const T &key) {
+void SplayTree<T>::insert(const T &data, int key) {
     Node *found_node = findAux(root, key);
-    if (found_node != NULL && key == *found_node->data) {
+    if (found_node != NULL && key == found_node->key) {
         throw KeyAlreadyExists();
     }
-    Node *to_insert = new Node(key, found_node);
+    Node *to_insert = new Node(data, key, found_node);
     if (found_node != NULL) {
-        if (key < *found_node->data) {
+        if (key < found_node->key) {
             found_node->left_son = to_insert;
         } else {
             found_node->right_son = to_insert;
@@ -114,12 +115,12 @@ void SplayTree<T>::insert(const T &key) {
 }
 
 template<class T>
-void SplayTree<T>::remove(const T &key) {
+void SplayTree<T>::remove(int key) {
     if (root == NULL) {
         throw EmptyTree();
     }
     Node *found_node = findAux(root, key);
-    if (key != *found_node->data) {
+    if (key != found_node->key) {
         throw KeyNotFound();
     }
     splay(found_node);
@@ -177,7 +178,7 @@ void SplayTree<T>::inOrder(do_something &func) {
 template<class T>
 template<class do_something>
 void SplayTree<T>::inOrderReverse(do_something &func) {
-    inOrderAux(root, func);
+    inOrderAuxReverese(root, func);
 }
 
 template<class T>
@@ -357,18 +358,18 @@ void SplayTree<T>::postOrderAuxRemoval(SplayTree::Node *cur_node) {
 }
 
 template<class T>
-typename SplayTree<T>::Node *SplayTree<T>::findAux(SplayTree::Node *cur_node, const T& key) {
+typename SplayTree<T>::Node *SplayTree<T>::findAux(SplayTree::Node *cur_node, int key) {
     if (cur_node == NULL) return NULL;
-    if (key == *cur_node->data) {
+    if (key == cur_node->key) {
         return cur_node;
     }
-    if (key > *cur_node->data) {
+    if (key > cur_node->key) {
         if (cur_node->right_son == NULL) {
             return cur_node;
         }
         return findAux(cur_node->right_son, key);
     }
-    if (key < *cur_node->data) {
+    if (key < cur_node->key) {
         if (cur_node->left_son == NULL) {
             return cur_node;
         }
@@ -382,7 +383,7 @@ typename SplayTree<T>::Node *SplayTree<T>::findAux(SplayTree::Node *cur_node, co
  */
 
 template<class T>
-SplayTree<T>::Node::Node(const T data, Node *parent) : data(new T(data)), parent(parent) {
+SplayTree<T>::Node::Node(const T data, int key, Node *parent) : data(new T(data)), key(key), parent(parent) {
     right_son = NULL;
     left_son = NULL;
 }
