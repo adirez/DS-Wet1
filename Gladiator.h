@@ -5,7 +5,7 @@
 #ifndef WET1_GLADIATOR_H
 #define WET1_GLADIATOR_H
 
-class Gladiator{
+class Gladiator {
 protected:
     friend class Stimulant;
     friend class Colosseum;
@@ -16,8 +16,9 @@ public:
     Gladiator() : id(0), level(0) {}
     Gladiator(int id, int level);
     virtual ~Gladiator() {};
-    int getID() const;
-    int getLevel() const;
+    virtual int getID() const;
+    virtual int getLevel() const;
+
     virtual bool operator<(const Gladiator &gladiator2) const = 0;
     virtual bool operator>(const Gladiator &gladiator2) const = 0;
 };

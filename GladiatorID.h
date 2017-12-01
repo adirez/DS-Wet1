@@ -17,8 +17,8 @@ public:
     GladiatorID(int id, int level, Trainer *ptr_to_trainer);
     GladiatorID(int id, int level);
     ~GladiatorID() {};
-    int GetID();
-    int GetLevel();
+    int getID() const;
+    int getLevel() const;
     bool operator<(const Gladiator &gladiator2) const;
     bool operator>(const Gladiator &gladiator2) const;
 };

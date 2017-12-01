@@ -11,12 +11,10 @@ class GladiatorLevel : public Gladiator {
 public:
     GladiatorLevel(int id, int level);
     ~GladiatorLevel() {};
-    int GetID();
-    int GetLevel();
+    int getID() const;
+    int getLevel() const;
     bool operator<(const Gladiator &gladiator2) const;
     bool operator>(const Gladiator &gladiator2) const;
 };
-
-
 
 #endif //WET1_GLADIATORLEVEL_H
