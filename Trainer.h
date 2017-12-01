@@ -6,8 +6,7 @@
 #define WET1_TRAINER_H
 
 #include "SplayTree.h"
-#include "Colosseum.h"
-#include "Gladiator.h"
+#include "GladiatorLevel.h"
 
 class Trainer {
 private:

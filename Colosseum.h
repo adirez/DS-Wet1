@@ -5,9 +5,8 @@
 #ifndef WET1_COLOSSEUM_H
 #define WET1_COLOSSEUM_H
 
-#include "Gladiator.h"
-#include "SplayTree.h"
-#include "Trainer.h"
+#include "GladiatorID.h"
+#include "GladiatorLevel.h"
 
 class Colosseum {
 private:

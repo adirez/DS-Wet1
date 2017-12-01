@@ -41,23 +41,6 @@ static Gladiator** merge(Gladiator** array1, Gladiator** array2, int size){
     return merged_array;
 }
 
-class StimulantTrainers{
-private:
-    Stimulant stimulant;
-public:
-    explicit StimulantTrainers(const Stimulant &stimulant) : stimulant(stimulant) {}
-    void operator()(const Trainer &trainer) {
-        int size = trainer.gladiators->getSize();
-        trainer.gladiators->inOrder(stimulant);
-        delete trainer.gladiators;
-        Gladiator** merged_array = merge(stimulant.gladiators1, stimulant.gladiators2, size);
-        for (int i = 0; i < size; ++i) {
-            GladiatorLevel *gladiatorLevel = dynamic_cast<GladiatorLevel*>(merged_array[i]);
-            trainer.gladiators->insert(*gladiatorLevel);
-        }
-    }
-};
-
 class Stimulant {
 private:
     int stimulant_code;
@@ -86,6 +69,23 @@ public:
         } else {
             gladiators2[j] = &gladiator;
             j++;
+        }
+    }
+};
+
+class StimulantTrainers{
+private:
+    Stimulant stimulant;
+public:
+    explicit StimulantTrainers(const Stimulant &stimulant) : stimulant(stimulant) {}
+    void operator()(const Trainer &trainer) {
+        int size = trainer.gladiators->getSize();
+        trainer.gladiators->inOrder(stimulant);
+        delete trainer.gladiators;
+        Gladiator** merged_array = merge(stimulant.gladiators1, stimulant.gladiators2, size);
+        for (int i = 0; i < size; ++i) {
+            GladiatorLevel *gladiatorLevel = dynamic_cast<GladiatorLevel*>(merged_array[i]);
+            trainer.gladiators->insert(*gladiatorLevel);
         }
     }
 };
