@@ -12,6 +12,7 @@ public:
     GladiatorLevel(int id, int level);
     ~GladiatorLevel() {};
     int GetID();
+    int GetLevel();
     bool operator<(const Gladiator &gladiator2) const;
     bool operator>(const Gladiator &gladiator2) const;
 };

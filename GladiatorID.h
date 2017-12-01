@@ -18,6 +18,7 @@ public:
     GladiatorID(int id, int level);
     ~GladiatorID() {};
     int GetID();
+    int GetLevel();
     bool operator<(const Gladiator &gladiator2) const;
     bool operator>(const Gladiator &gladiator2) const;
 };
