@@ -182,6 +182,7 @@ template<class T>
 T &SplayTree<T>::getMin(){
     return min->data;
 }
+
 template<class T>
 int SplayTree<T>::getSize(){
     return size;

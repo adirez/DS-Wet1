@@ -26,6 +26,10 @@ bool Gladiator::operator!=(const Gladiator &gladiator2) const {
     return !this == gladiator2;
 }
 
+int Gladiator::getID() const {
+    return id;
+}
+
 bool GladiatorLevel::operator<(const Gladiator &gladiator2) const {
     if(level < gladiator2.level) return true;
     if(level == gladiator2.level){

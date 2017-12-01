@@ -4,7 +4,13 @@
 
 #include "Trainer.h"
 
-Trainer::Trainer(int id) : id(id) {}
+Trainer::Trainer(int id) : id(id) {
+    gladiators = new SplayTree<GladiatorLevel>;
+}
+
+Trainer::~Trainer() {
+    delete gladiators;
+}
 
 bool Trainer::operator<(const Trainer &trainer2) const {
     return id < trainer2.id;

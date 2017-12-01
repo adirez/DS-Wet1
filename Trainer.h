@@ -12,13 +12,13 @@
 class Trainer {
 private:
     int id;
-    SplayTree<GladiatorLevel*> gladiators;
+    SplayTree<GladiatorLevel> *gladiators;
 
     friend class Colosseum;
     friend class StimulantTrainers;
 public:
     explicit Trainer(int id);
-    ~Trainer() {};
+    ~Trainer();
     bool operator<(const Trainer &trainer2) const;
     bool operator>(const Trainer &trainer2) const;
     bool operator==(const Trainer &trainer2) const;

@@ -13,15 +13,16 @@ class Colosseum {
 private:
     int num_gladiators;
     int num_trainers;
-    SplayTree<GladiatorID*> gladiators_id_tree;
-    SplayTree<GladiatorLevel*> gladiators_level_tree;
-    SplayTree<Trainer*> trainers_tree;
+    SplayTree<GladiatorID> *gladiators_id_tree;
+    SplayTree<GladiatorLevel> *gladiators_level_tree;
+    SplayTree<Trainer> *trainers_tree;
 
     Colosseum(const Colosseum &colosseum);
     Colosseum &operator=(const Colosseum &colosseum);
 
 public:
     Colosseum();
+    ~Colosseum();
     void addTrainer(int trainer_id);
     void buyGladiator(int gladiator_id, int trainer_id, int level);
     void freeGladiator(int gladiator_id);
