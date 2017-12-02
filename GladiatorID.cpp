@@ -9,6 +9,10 @@ GladiatorID::GladiatorID(int id, int level, Trainer *ptr_to_trainer) : Gladiator
 
 GladiatorID::GladiatorID(int id, int level) : Gladiator(id, level), ptr_to_trainer(NULL) {}
 
+GladiatorID::GladiatorID(const GladiatorID &gladiator) : Gladiator(gladiator.id, gladiator.level) {
+    this->ptr_to_trainer = gladiator.ptr_to_trainer;
+}
+
 bool GladiatorID::operator<(const Gladiator &gladiator2) const {
     return id < gladiator2.getID();
 }
@@ -18,11 +22,13 @@ bool GladiatorID::operator>(const Gladiator &gladiator2) const {
 }
 
 int GladiatorID::getID() const {
-    return Gladiator::getID();
+    return id;
+    //return Gladiator::getID();
 }
 
 int GladiatorID::getLevel() const {
-    return Gladiator::getLevel();
+    return level;
+    //return Gladiator::getLevel();
 }
 
 Trainer *GladiatorID::getTrainerPtr() const {

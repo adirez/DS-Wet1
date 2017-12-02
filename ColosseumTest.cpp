@@ -32,13 +32,13 @@ int main() {
     int *arr;
     colosseum.getAllGladiatorsByLevel(1, &num, &arr);
 
-    cout << "num of objects: " << num << endl;
+/*    cout << "num of objects: " << num << endl;
     for (int i = 0; i < 3; ++i) {
         cout << arr[i] << " || ";
-    }
+    }*/
 
     colosseum.updateLevels(2, 2);
-
+    cout << "End." << endl;
     return 0;
 
 }

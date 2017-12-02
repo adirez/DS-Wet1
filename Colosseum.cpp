@@ -89,18 +89,18 @@ public:
             } else {
                 GladiatorID *gladiatorID = dynamic_cast<GladiatorID *>(gladiator);
                 GladiatorID *new_gladiator = new GladiatorID(gladiatorID->getID(), gladiatorID->getLevel()*stimulant_factor, gladiatorID->getTrainerPtr());
-                gladiators2[i] = new_gladiator;
+                gladiators1[i] = new_gladiator;
             }
             i++;
         } else {
             if(type == Gladiator_Level){
                 GladiatorLevel *gladiatorLevel = dynamic_cast<GladiatorLevel *>(gladiator);
                 GladiatorLevel *new_gladiator = new GladiatorLevel(gladiatorLevel->getID(), gladiatorLevel->getLevel());
-                gladiators1[j] = new_gladiator;
+                gladiators2[j] = new_gladiator;
             } else {
                 GladiatorID *gladiatorID = dynamic_cast<GladiatorID *>(gladiator);
                 GladiatorID *new_gladiator = new GladiatorID(gladiatorID->getID(), gladiatorID->getLevel(), gladiatorID->getTrainerPtr());
-                gladiators2 [j] = new_gladiator;
+                gladiators2[j] = new_gladiator;
             }
             j++;
         }
@@ -229,6 +229,7 @@ void Colosseum::updateLevels(int stimulantCode, int stimulantFactor) {
     Gladiator **merged_array = merge(stimulant.gladiators1, stimulant.gladiators2, num_gladiators);
     for (int i = 0; i < num_gladiators; ++i) {
         GladiatorID *gladiatorID = dynamic_cast<GladiatorID *>(merged_array[i]);
+        cout << gladiatorID->getID() << endl;
         gladiators_id_tree->insert(GladiatorID(gladiatorID->getID(), gladiatorID->getLevel(), gladiatorID->getTrainerPtr()));
     }
 

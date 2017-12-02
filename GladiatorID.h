@@ -17,6 +17,7 @@ public:
     GladiatorID(int id, int level, Trainer *ptr_to_trainer);
     GladiatorID(int id, int level);
     ~GladiatorID() {};
+    GladiatorID(const GladiatorID& gladiator);
     int getID() const;
     int getLevel() const;
     Trainer* getTrainerPtr() const;

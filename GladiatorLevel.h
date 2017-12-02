@@ -11,6 +11,7 @@ class GladiatorLevel : public Gladiator {
 public:
     GladiatorLevel(int id, int level);
     ~GladiatorLevel() {};
+    GladiatorLevel(const GladiatorLevel& gladiator);
     int getID() const;
     int getLevel() const;
     bool operator<(const Gladiator &gladiator2) const;

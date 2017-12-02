@@ -22,6 +22,8 @@ bool GladiatorLevel::operator>(const Gladiator &gladiator2) const {
 
 GladiatorLevel::GladiatorLevel(int id, int level) : Gladiator(id, level) {}
 
+GladiatorLevel :: GladiatorLevel(const GladiatorLevel& gladiator) : Gladiator(gladiator.level, gladiator.id){}
+
 int GladiatorLevel::getLevel() const {
     return Gladiator::getLevel();
 }
