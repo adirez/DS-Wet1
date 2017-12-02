@@ -4,27 +4,43 @@
 
 #include "GladiatorID.h"
 
-GladiatorID::GladiatorID(int id, int level, Trainer *ptr_to_trainer) : Gladiator(id, level), ptr_to_trainer(ptr_to_trainer) {}
+GladiatorID::GladiatorID() : id(0), level(0) {}
 
-
-GladiatorID::GladiatorID(int id, int level) : Gladiator(id, level), ptr_to_trainer(NULL) {}
-
-bool GladiatorID::operator<(const Gladiator &gladiator2) const {
-    return id < gladiator2.getID();
+GladiatorID::GladiatorID(int id, int level, Trainer *ptr_to_trainer) : id(id), level(level) {
+    this->ptr_to_trainer = ptr_to_trainer;
 }
 
-bool GladiatorID::operator>(const Gladiator &gladiator2) const {
-    return id > gladiator2.getID();
+
+GladiatorID::GladiatorID(int id, int level) : id(id), level(level), ptr_to_trainer(NULL) {}
+
+bool GladiatorID::operator<(const GladiatorID &gladiator2) const {
+    return id < gladiator2.id;
+}
+
+bool GladiatorID::operator>(const GladiatorID &gladiator2) const {
+    return id > gladiator2.id;
 }
 
 int GladiatorID::getID() const {
-    return Gladiator::getID();
+    return id;
 }
 
 int GladiatorID::getLevel() const {
-    return Gladiator::getLevel();
+    return level;
 }
 
 Trainer *GladiatorID::getTrainerPtr() const {
     return ptr_to_trainer;
+}
+
+GladiatorID::GladiatorID(const GladiatorID &gladiatorID) : id(gladiatorID.id), level(gladiatorID.level) {
+    ptr_to_trainer = gladiatorID.ptr_to_trainer;
+}
+
+bool operator==(const GladiatorID &gladiator1, const GladiatorID &gladiator2){
+    return gladiator1.id == gladiator2.id;
+}
+
+bool operator!=(const GladiatorID &gladiator1, const GladiatorID &gladiator2){
+    return !(gladiator1 == gladiator2);
 }

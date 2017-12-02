@@ -32,100 +32,103 @@ public:
     }
 };
 
-static Gladiator **merge(Gladiator **array1, Gladiator **array2, int size) {
-    int j = 0, k = 0;
-    Gladiator **merged_array = new Gladiator*[size];
-    for (int i = 0; i < size; ++i) {
-        if (array1[j] < array2[k]) {
-            merged_array[i] = array1[j];
-            j++;
-        } else {
-            merged_array[i] = array2[k];
-            k++;
-        }
-    }
-    return merged_array;
-}
-
-class Stimulant {
+class StimulantID {
 private:
     int stimulant_code;
     int stimulant_factor;
-    Gladiator **gladiators1;
-    Gladiator **gladiators2;
+    GladiatorID *gladiators1;
+    GladiatorID *gladiators2;
     int i;
     int j;
-    GladiatorType type;
 
     friend class Colosseum;
-
     friend class StimulantTrainers;
 
 public:
-    Stimulant(int stimulant_code, int stimulant_factor, int num_of_gladiators, GladiatorType type) : stimulant_code(stimulant_code),
+    StimulantID(int stimulant_code, int stimulant_factor, int num_of_gladiators) : stimulant_code(stimulant_code),
                                                                                  stimulant_factor(stimulant_factor),
-                                                                                 i(0), j(0), type(type) {
-        gladiators1 = new Gladiator *[num_of_gladiators];
-        gladiators2 = new Gladiator *[num_of_gladiators];
+                                                                                 i(0), j(0){
+        gladiators1 = new GladiatorID [num_of_gladiators];
+        gladiators2 = new GladiatorID [num_of_gladiators];
     }
 
-    ~Stimulant() {
-        for (int k = 0; k < i; ++k) {
-            delete gladiators1[k];
-        }
-        for (int k = 0; k < j; ++k) {
-            delete gladiators2[k];
-        }
-        delete gladiators1;
-        delete gladiators2;
+    ~StimulantID() {
+        delete[] gladiators1;
+        delete[] gladiators2;
     }
 
-    void operator()(Gladiator *gladiator) {
-        if (gladiator->id % stimulant_code == 0) {
-            if(type == Gladiator_Level){
-                GladiatorLevel *gladiatorLevel = dynamic_cast<GladiatorLevel *>(gladiator);
-                GladiatorLevel *new_gladiator = new GladiatorLevel(gladiatorLevel->getID(), gladiatorLevel->getLevel()*stimulant_factor);
-                gladiators1[i] = new_gladiator;
-            } else {
-                GladiatorID *gladiatorID = dynamic_cast<GladiatorID *>(gladiator);
-                GladiatorID *new_gladiator = new GladiatorID(gladiatorID->getID(), gladiatorID->getLevel()*stimulant_factor, gladiatorID->getTrainerPtr());
-                gladiators2[i] = new_gladiator;
-            }
+    void operator()(GladiatorID *gladiator) {
+        if (gladiator->getID() % stimulant_code == 0) {
+            gladiators1[i] = *gladiator;
             i++;
         } else {
-            if(type == Gladiator_Level){
-                GladiatorLevel *gladiatorLevel = dynamic_cast<GladiatorLevel *>(gladiator);
-                GladiatorLevel *new_gladiator = new GladiatorLevel(gladiatorLevel->getID(), gladiatorLevel->getLevel());
-                gladiators1[j] = new_gladiator;
-            } else {
-                GladiatorID *gladiatorID = dynamic_cast<GladiatorID *>(gladiator);
-                GladiatorID *new_gladiator = new GladiatorID(gladiatorID->getID(), gladiatorID->getLevel(), gladiatorID->getTrainerPtr());
-                gladiators2 [j] = new_gladiator;
-            }
+            gladiators2[j] = *gladiator;
             j++;
         }
     }
 };
 
-/*class StimulantTrainers {
+class StimulantLevel {
 private:
-    Stimulant stimulant;
+    int stimulant_code;
+    int stimulant_factor;
+    GladiatorLevel *gladiators1;
+    GladiatorLevel *gladiators2;
+    int i;
+    int j;
+
+    friend class Colosseum;
+    friend class StimulantTrainers;
+
 public:
-    explicit StimulantTrainers(const Stimulant &stimulant) : stimulant(stimulant) {}
+    StimulantLevel(int stimulant_code, int stimulant_factor, int num_of_gladiators) : stimulant_code(stimulant_code),
+                                                                                   stimulant_factor(stimulant_factor),
+                                                                                   i(0), j(0){
+        gladiators1 = new GladiatorLevel [num_of_gladiators];
+        gladiators2 = new GladiatorLevel [num_of_gladiators];
+    }
+
+    ~StimulantLevel() {
+        delete[] gladiators1;
+        delete[] gladiators2;
+    }
+
+    void operator()(GladiatorLevel *gladiator) {
+        if (gladiator->getID() % stimulant_code == 0) {
+            gladiators1[i] = *gladiator;
+            i++;
+        } else {
+            gladiators2[j] = *gladiator;
+            j++;
+        }
+    }
+};
+
+class StimulantTrainers {
+private:
+    StimulantLevel *stimulant;
+public:
+    explicit StimulantTrainers(StimulantLevel *stimulant) : stimulant(stimulant) {}
 
     ~StimulantTrainers() {}
 
-    void operator()(const Trainer &trainer) {
+    void operator()(Trainer &trainer) {
         int size = trainer.gladiators->getSize();
-        trainer.gladiators->inOrder(stimulant);
+        trainer.gladiators->inOrder(*stimulant);
         delete trainer.gladiators;
-        Gladiator **merged_array = merge(stimulant.gladiators1, stimulant.gladiators2, size);
+        trainer.gladiators = new SplayTree<GladiatorLevel>;
+        int j = 0, k = 0;
         for (int i = 0; i < size; ++i) {
-            GladiatorLevel *gladiatorLevel = dynamic_cast<GladiatorLevel *>(merged_array[i]);
-            trainer.gladiators->insert(*gladiatorLevel);
+            if (stimulant->gladiators1[j] < stimulant->gladiators2[k]) {
+                trainer.gladiators->insert(stimulant->gladiators1[j]);
+                j++;
+            } else {
+                trainer.gladiators->insert(stimulant->gladiators2[k]);
+                k++;
+            }
         }
     }
-};*/
+};
 
 Colosseum::Colosseum() : num_gladiators(0), num_trainers(0) {
     gladiators_id_tree = new SplayTree<GladiatorID>;
@@ -222,28 +225,38 @@ void Colosseum::updateLevels(int stimulantCode, int stimulantFactor) {
     if (stimulantCode < 1 || stimulantFactor < 1) {
         throw InvalidParameter();
     }
-    Stimulant stimulant(stimulantCode, stimulantFactor, num_gladiators, Gladiator_ID);
+    StimulantID stimulant(stimulantCode, stimulantFactor, num_gladiators);
     gladiators_id_tree->inOrder(stimulant);
     delete gladiators_id_tree;
     gladiators_id_tree = new SplayTree<GladiatorID>;
-    Gladiator **merged_array = merge(stimulant.gladiators1, stimulant.gladiators2, num_gladiators);
+    int j = 0, k = 0;
     for (int i = 0; i < num_gladiators; ++i) {
-        GladiatorID *gladiatorID = dynamic_cast<GladiatorID *>(merged_array[i]);
-        gladiators_id_tree->insert(GladiatorID(gladiatorID->getID(), gladiatorID->getLevel(), gladiatorID->getTrainerPtr()));
+        if (stimulant.gladiators1[j] < stimulant.gladiators2[k]) {
+            gladiators_id_tree->insert(stimulant.gladiators1[j]);
+            j++;
+        } else {
+            gladiators_id_tree->insert(stimulant.gladiators2[k]);
+            k++;
+        }
     }
 
-    Stimulant stimulant1(stimulantCode, stimulantFactor, num_gladiators, Gladiator_Level);
+    StimulantLevel stimulant1(stimulantCode, stimulantFactor, num_gladiators);
     gladiators_level_tree->inOrder(stimulant1);
     delete gladiators_level_tree;
     gladiators_level_tree = new SplayTree<GladiatorLevel>;
-    Gladiator **merged_array1 = merge(stimulant1.gladiators1, stimulant1.gladiators2, num_gladiators);
+    j = 0, k = 0;
     for (int i = 0; i < num_gladiators; ++i) {
-        GladiatorLevel *gladiatorLevel = dynamic_cast<GladiatorLevel *>(merged_array1[i]);
-        gladiators_level_tree->insert(GladiatorLevel(gladiatorLevel->getID(), gladiatorLevel->getLevel()));
+        if (stimulant.gladiators1[j] < stimulant.gladiators2[k]) {
+            gladiators_level_tree->insert(stimulant1.gladiators1[j]);
+            j++;
+        } else {
+            gladiators_level_tree->insert(stimulant1.gladiators2[k]);
+            k++;
+        }
     }
 
-//    Stimulant stimulant2(stimulantCode, stimulantFactor, num_gladiators, Gladiator_Level);
-//    StimulantTrainers stimulant_trainers(stimulant2);
+    StimulantLevel stimulant2(stimulantCode, stimulantFactor, num_gladiators);
+    StimulantTrainers stimulant_trainers(&stimulant2);
 }
 
 

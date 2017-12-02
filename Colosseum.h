@@ -23,7 +23,6 @@ private:
 
     Colosseum(const Colosseum &colosseum);
     Colosseum &operator=(const Colosseum &colosseum);
-
 public:
     Colosseum();
     ~Colosseum();

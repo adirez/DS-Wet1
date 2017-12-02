@@ -5,16 +5,25 @@
 #ifndef WET1_GLADIATORLEVEL_H
 #define WET1_GLADIATORLEVEL_H
 
-#include "Gladiator.h"
 
-class GladiatorLevel : public Gladiator {
+class GladiatorLevel {
+    int id;
+    int level;
+
+    friend bool operator==(const GladiatorLevel &gladiator1, const GladiatorLevel &gladiator2);
+    friend bool operator!=(const GladiatorLevel &gladiator1, const GladiatorLevel &gladiator2);
+
 public:
+    GladiatorLevel();
     GladiatorLevel(int id, int level);
     ~GladiatorLevel() {};
     int getID() const;
     int getLevel() const;
-    bool operator<(const Gladiator &gladiator2) const;
-    bool operator>(const Gladiator &gladiator2) const;
+    bool operator<(const GladiatorLevel &gladiator2) const;
+    bool operator>(const GladiatorLevel &gladiator2) const;
 };
+
+bool operator==(const GladiatorLevel &gladiator1, const GladiatorLevel &gladiator2);
+bool operator!=(const GladiatorLevel &gladiator1, const GladiatorLevel &gladiator2);
 
 #endif //WET1_GLADIATORLEVEL_H

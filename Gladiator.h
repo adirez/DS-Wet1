@@ -16,6 +16,7 @@ protected:
 public:
     Gladiator() : id(0), level(0) {}
     Gladiator(int id, int level);
+    Gladiator(const Gladiator& gladiator);
     virtual ~Gladiator() {};
     virtual int getID() const;
     virtual int getLevel() const;

@@ -14,6 +14,8 @@ int Gladiator::getLevel() const {
     return level;
 }
 
+Gladiator::Gladiator(const Gladiator &gladiator) : id(gladiator.id), level(gladiator.level) {}
+
 bool operator==(const Gladiator &gladiator1, const Gladiator &gladiator2){
     return gladiator1.getID() == gladiator2.getID();
 }
