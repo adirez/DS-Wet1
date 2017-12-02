@@ -25,8 +25,6 @@ GladiatorLevel::GladiatorLevel(int id, int level) : id(id), level(level) {}
 
 GladiatorLevel::GladiatorLevel() : id(0), level(0) {}
 
-GladiatorLevel :: GladiatorLevel(const GladiatorLevel& gladiator) : Gladiator(gladiator.level, gladiator.id){}
-
 int GladiatorLevel::getLevel() const {
     return level;
 }
@@ -42,3 +40,5 @@ bool operator==(const GladiatorLevel &gladiator1, const GladiatorLevel &gladiato
 bool operator!=(const GladiatorLevel &gladiator1, const GladiatorLevel &gladiator2){
     return !(gladiator1 == gladiator2);
 }
+
+GladiatorLevel::GladiatorLevel(const GladiatorLevel &gladiatorLevel) : id(gladiatorLevel.id), level(gladiatorLevel.level){}
