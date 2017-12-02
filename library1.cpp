@@ -88,7 +88,7 @@ StatusType LevelUp(void *DS, int gladiatorID, int levelIncrease) {
 }
 
 StatusType GetTopGladiator(void *DS, int trainerID, int *gladiatorID) {
-    if (DS == NULL || gladiatorID == NULL) {
+    if (DS == NULL || gladiatorID == NULL || trainerID == 0) {
         return INVALID_INPUT;
     }
     Colosseum *colosseum = (Colosseum *) DS;
@@ -136,6 +136,8 @@ StatusType UpgradeGladiator(void *DS, int gladiatorID, int upgradedID) {
     } catch (InvalidParameter &e) {
         return INVALID_INPUT;
     } catch (KeyNotFound &e) {
+        return FAILURE;
+    } catch (KeyAlreadyExists &e) {
         return FAILURE;
     }
     return SUCCESS;
