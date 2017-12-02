@@ -77,7 +77,7 @@ template<class T>
 T &SplayTree<T>::find(const T &key) {
     Node *found_node = findAux(root, key);
     splay(found_node);
-    if (*found_node->data != key) {
+    if (found_node == NULL || *found_node->data != key) {
         throw KeyNotFound();
     }
     return *found_node->data;
@@ -195,7 +195,7 @@ int SplayTree<T>::getSize() {
 
 template<class T>
 void SplayTree<T>::splay(SplayTree::Node *node) {
-    while (node != root && node->parent != root) {
+    while (node!=NULL && node->parent != NULL && node != root && node->parent != root) {
         Node *p = node->parent;
         Node *g = p->parent;
         if ((*node->data < *p->data && *node->data > *g->data) ||
@@ -205,7 +205,7 @@ void SplayTree<T>::splay(SplayTree::Node *node) {
             zigZig(node);
         }
     }
-    if (node->parent == root && node->parent != NULL) {
+    if (node != NULL && node->parent != NULL && node->parent == root && node->parent != NULL) {
         zig(node);
     }
 }

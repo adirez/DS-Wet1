@@ -88,7 +88,7 @@ StatusType LevelUp(void *DS, int gladiatorID, int levelIncrease) {
 }
 
 StatusType GetTopGladiator(void *DS, int trainerID, int *gladiatorID) {
-    if (DS == NULL) {
+    if (DS == NULL || gladiatorID == NULL) {
         return INVALID_INPUT;
     }
     Colosseum *colosseum = (Colosseum *) DS;
@@ -100,12 +100,15 @@ StatusType GetTopGladiator(void *DS, int trainerID, int *gladiatorID) {
         return INVALID_INPUT;
     } catch (KeyNotFound &e) {
         return FAILURE;
+    } catch (EmptyTree &e){
+        *gladiatorID = -1;
+        return SUCCESS;
     }
     return SUCCESS;
 }
 
 StatusType GetAllGladiatorsByLevel(void *DS, int trainerID, int **gladiators, int *numOfGladiator){
-    if (DS == NULL) {
+    if (DS == NULL || gladiators == NULL || numOfGladiator == NULL || trainerID == 0) {
         return INVALID_INPUT;
     }
     Colosseum *colosseum = (Colosseum *) DS;

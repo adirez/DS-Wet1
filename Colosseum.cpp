@@ -158,6 +158,9 @@ void Colosseum::buyGladiator(int gladiator_id, int trainer_id, int level) {
     if (gladiator_id <= 0 || trainer_id <= 0 || level <= 0) {
         throw InvalidParameter();
     }
+    if(trainers_tree->find(Trainer(trainer_id)) != Trainer(trainer_id)){
+        throw KeyNotFound();
+    }
     gladiators_level_tree->insert(GladiatorLevel(gladiator_id, level));
     trainers_tree->find(Trainer(trainer_id)).gladiators->insert(GladiatorLevel(gladiator_id, level));
     gladiators_id_tree->insert(GladiatorID(gladiator_id, level, &trainers_tree->find(Trainer(trainer_id))));
@@ -169,9 +172,9 @@ void Colosseum::freeGladiator(int gladiator_id) {
         throw InvalidParameter();
     }
     GladiatorID to_delete = gladiators_id_tree->find(GladiatorID(gladiator_id, 0));
-    gladiators_level_tree->remove(GladiatorLevel(gladiator_id, 0));
+    gladiators_level_tree->remove(GladiatorLevel(gladiator_id, to_delete.getLevel()));
     Trainer *trainer = to_delete.ptr_to_trainer;
-    trainer->gladiators->remove(GladiatorLevel(gladiator_id, 0));
+    trainer->gladiators->remove(GladiatorLevel(gladiator_id, to_delete.getLevel()));
     gladiators_id_tree->remove(to_delete);
     num_gladiators--;
 }
@@ -182,7 +185,7 @@ void Colosseum::levelUp(int gladiator_id, int level_inc) {
     }
     GladiatorID gladiator_by_id = gladiators_id_tree->find(GladiatorID(gladiator_id, 0));
 
-    gladiators_level_tree->remove(GladiatorLevel(gladiator_id, 0));
+    gladiators_level_tree->remove(GladiatorLevel(gladiator_id, gladiator_by_id.getLevel()));
     gladiator_by_id.ptr_to_trainer->gladiators->remove(GladiatorLevel(gladiator_id, 0));
     gladiator_by_id.level += level_inc;
 
@@ -193,6 +196,9 @@ void Colosseum::levelUp(int gladiator_id, int level_inc) {
 int Colosseum::getTopGladiator(int trainer_id) {
     if (trainer_id < 0) {
         return gladiators_level_tree->getMax().getID();
+    }
+    if(gladiators_id_tree->getSize() == 0){
+        throw EmptyTree();
     }
     if(trainers_tree->find(Trainer(trainer_id)).gladiators->getSize() == 0){
         return -1;
