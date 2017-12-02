@@ -25,7 +25,8 @@ public:
         }
     }
 
-    ~GladiatorsByLevel() {} //we don't want the default destructor so it will not delete the array
+    ~GladiatorsByLevel() {
+    } //we don't want the default destructor so it will not delete the array
     void operator()(const GladiatorLevel *gladiator) {
         (*gladiators_ids)[index] = gladiator->getID();
         index++;
@@ -121,7 +122,8 @@ public:
         trainer.gladiators = new SplayTree<GladiatorLevel>;
         int j = 0, k = 0;
         for (int i = 0; i < size; ++i) {
-            if (stimulant->gladiators1[j] < stimulant->gladiators2[k]) {
+            if ((stimulant->gladiators1[j] < stimulant->gladiators2[k] && stimulant->gladiators1[j].getID() != -1) ||
+                stimulant->gladiators2[k].getID() == -1) {
                 trainer.gladiators->insert(stimulant->gladiators1[j]);
                 j++;
             } else {
@@ -156,8 +158,8 @@ void Colosseum::buyGladiator(int gladiator_id, int trainer_id, int level) {
     if (gladiator_id <= 0 || trainer_id <= 0 || level <= 0) {
         throw InvalidParameter();
     }
-    trainers_tree->find(Trainer(trainer_id)).gladiators->insert(GladiatorLevel(gladiator_id, level));
     gladiators_level_tree->insert(GladiatorLevel(gladiator_id, level));
+    trainers_tree->find(Trainer(trainer_id)).gladiators->insert(GladiatorLevel(gladiator_id, level));
     gladiators_id_tree->insert(GladiatorID(gladiator_id, level, &trainers_tree->find(Trainer(trainer_id))));
     num_gladiators++;
 }
@@ -191,6 +193,9 @@ void Colosseum::levelUp(int gladiator_id, int level_inc) {
 int Colosseum::getTopGladiator(int trainer_id) {
     if (trainer_id < 0) {
         return gladiators_level_tree->getMax().getID();
+    }
+    if(trainers_tree->find(Trainer(trainer_id)).gladiators->getSize() == 0){
+        return -1;
     }
     return trainers_tree->find(Trainer(trainer_id)).gladiators->getMax().getID();
 }
@@ -248,8 +253,8 @@ void Colosseum::updateLevels(int stimulantCode, int stimulantFactor) {
     gladiators_level_tree = new SplayTree<GladiatorLevel>;
     j = 0, k = 0;
     for (int i = 0; i < num_gladiators; ++i) {
-        if ((stimulant.gladiators1[j] < stimulant.gladiators2[k] && stimulant.gladiators1[j].getID() != -1) ||
-                stimulant.gladiators2[k].getID() == -1)  {
+        if ((stimulant1.gladiators1[j] < stimulant1.gladiators2[k] && stimulant1.gladiators1[j].getID() != -1) ||
+                stimulant1.gladiators2[k].getID() == -1)  {
             gladiators_level_tree->insert(stimulant1.gladiators1[j]);
             j++;
         } else {

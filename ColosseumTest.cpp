@@ -21,13 +21,35 @@ int main() {
     }
     colosseum.buyGladiator(102, 5, 25);
     colosseum.getTopGladiator(-1);
+    colosseum.levelUp(102, 26);
+    int *arr;
+    int *arr1;
+    int *arr2;
+    int *arr3;
+    int *arr4;
+    int *arr5;
+    int num_of_gladiators = 0;
+    colosseum.getAllGladiatorsByLevel(-1,&num_of_gladiators, &arr);
+    colosseum.freeGladiator(102);
+    colosseum.getAllGladiatorsByLevel(-1,&num_of_gladiators, &arr1);
+    colosseum.getTopGladiator(5);
+    colosseum.updateGladiator(101, 105);
+    colosseum.getTopGladiator(-1);
+    colosseum.updateGladiator(105, 101);
     colosseum.buyGladiator(105, 4, 5);
     colosseum.buyGladiator(120, 5, 15);
-    try{
-        colosseum.updateLevels(5, 4);
-    } catch (KeyAlreadyExists &e){
-        cout << "print2" << endl;
-    }
+    colosseum.getAllGladiatorsByLevel(-1, &num_of_gladiators, &arr2);
+    colosseum.getAllGladiatorsByLevel(4, &num_of_gladiators, &arr3);
+    colosseum.getAllGladiatorsByLevel(5, &num_of_gladiators, &arr4);
+    colosseum.updateLevels(5, 4);
+    colosseum.getAllGladiatorsByLevel(-1, &num_of_gladiators, &arr5);
+
+    free(arr);
+    free(arr1);
+    free(arr2);
+    free(arr3);
+    free(arr4);
+    free(arr5);
 
     return 0;
 }

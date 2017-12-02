@@ -156,6 +156,8 @@ StatusType UpdateLevels(void *DS, int stimulantCode, int stimulantFactor){
 }
 
 void Quit(void** DS){
-    Colosseum *colosseum = (Colosseum *) DS;
-    delete colosseum;
+    if (DS != NULL) {
+        delete(((Colosseum*)*DS));
+        *DS = NULL;
+    }
 }

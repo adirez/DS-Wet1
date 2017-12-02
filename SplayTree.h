@@ -342,9 +342,9 @@ template<class do_something>
 void SplayTree<T>::inOrderAuxReverese(Node *cur_node, do_something &func) {
     if (cur_node == NULL) return;
 
-    inOrderAux(cur_node->right_son, func);
+    inOrderAuxReverese(cur_node->right_son, func);
     func(cur_node->data);
-    inOrderAux(cur_node->left_son, func);
+    inOrderAuxReverese(cur_node->left_son, func);
 }
 
 template<class T>
