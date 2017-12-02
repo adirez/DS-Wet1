@@ -16,13 +16,18 @@ int main() {
     colosseum.addTrainer(5);
     try{
         colosseum.buyGladiator(101, 5, 25);
-    } catch (KeyAlreadyExists &e){}
-
+    } catch (KeyAlreadyExists &e){
+        cout << "print" << endl;
+    }
     colosseum.buyGladiator(102, 5, 25);
     colosseum.getTopGladiator(-1);
     colosseum.buyGladiator(105, 4, 5);
     colosseum.buyGladiator(120, 5, 15);
-    colosseum.updateLevels(5, 4);
+    try{
+        colosseum.updateLevels(5, 4);
+    } catch (KeyAlreadyExists &e){
+        cout << "print2" << endl;
+    }
 
     return 0;
 }

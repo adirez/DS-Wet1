@@ -4,7 +4,7 @@
 
 #include "GladiatorID.h"
 
-GladiatorID::GladiatorID() : id(0), level(0) {}
+GladiatorID::GladiatorID() : id(-1), level(-1) {}
 
 GladiatorID::GladiatorID(int id, int level, Trainer *ptr_to_trainer) : id(id), level(level) {
     this->ptr_to_trainer = ptr_to_trainer;

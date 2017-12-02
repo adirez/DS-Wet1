@@ -59,7 +59,8 @@ public:
 
     void operator()(GladiatorID *gladiator) {
         if (gladiator->getID() % stimulant_code == 0) {
-            gladiators1[i] = *gladiator;
+            GladiatorID gladiatorID(gladiator->getID(), gladiator->getLevel()*stimulant_factor, gladiator->getTrainerPtr());
+            gladiators1[i] = gladiatorID;
             i++;
         } else {
             gladiators2[j] = *gladiator;
@@ -95,7 +96,8 @@ public:
 
     void operator()(GladiatorLevel *gladiator) {
         if (gladiator->getID() % stimulant_code == 0) {
-            gladiators1[i] = *gladiator;
+            GladiatorLevel gladiatorLevel(gladiator->getID(), gladiator->getLevel()*stimulant_factor);
+            gladiators1[i] = gladiatorLevel;
             i++;
         } else {
             gladiators2[j] = *gladiator;
@@ -231,7 +233,8 @@ void Colosseum::updateLevels(int stimulantCode, int stimulantFactor) {
     gladiators_id_tree = new SplayTree<GladiatorID>;
     int j = 0, k = 0;
     for (int i = 0; i < num_gladiators; ++i) {
-        if (stimulant.gladiators1[j] < stimulant.gladiators2[k]) {
+        if ((stimulant.gladiators1[j] < stimulant.gladiators2[k] && stimulant.gladiators1[j].getID() != -1) ||
+                stimulant.gladiators2[k].getID() == -1) {
             gladiators_id_tree->insert(stimulant.gladiators1[j]);
             j++;
         } else {
@@ -246,7 +249,8 @@ void Colosseum::updateLevels(int stimulantCode, int stimulantFactor) {
     gladiators_level_tree = new SplayTree<GladiatorLevel>;
     j = 0, k = 0;
     for (int i = 0; i < num_gladiators; ++i) {
-        if (stimulant.gladiators1[j] < stimulant.gladiators2[k]) {
+        if ((stimulant.gladiators1[j] < stimulant.gladiators2[k] && stimulant.gladiators1[j].getID() != -1) ||
+                stimulant.gladiators2[k].getID() == -1)  {
             gladiators_level_tree->insert(stimulant1.gladiators1[j]);
             j++;
         } else {
