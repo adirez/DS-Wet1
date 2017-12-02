@@ -23,6 +23,7 @@ public:
     GladiatorID(int id, int level);
     GladiatorID(const GladiatorID &gladiatorID);
     ~GladiatorID() {};
+    GladiatorID(const GladiatorID& gladiator);
     int getID() const;
     int getLevel() const;
     Trainer* getTrainerPtr() const;

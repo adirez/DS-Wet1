@@ -25,6 +25,8 @@ GladiatorLevel::GladiatorLevel(int id, int level) : id(id), level(level) {}
 
 GladiatorLevel::GladiatorLevel() : id(0), level(0) {}
 
+GladiatorLevel :: GladiatorLevel(const GladiatorLevel& gladiator) : Gladiator(gladiator.level, gladiator.id){}
+
 int GladiatorLevel::getLevel() const {
     return level;
 }
