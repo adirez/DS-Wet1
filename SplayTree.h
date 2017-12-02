@@ -57,7 +57,7 @@ public:
     void inOrder(do_something &func);
     template<class do_something>
     void inOrderReverse(do_something &func);
-    T &getMin();
+    T &getMax();
     int getSize();
 };
 
@@ -180,8 +180,8 @@ void SplayTree<T>::inOrderReverse(do_something &func) {
 }
 
 template<class T>
-T &SplayTree<T>::getMin() {
-    return *min->data;
+T &SplayTree<T>::getMax() {
+    return *max->data;
 }
 
 template<class T>

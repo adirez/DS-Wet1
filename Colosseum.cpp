@@ -190,10 +190,9 @@ void Colosseum::levelUp(int gladiator_id, int level_inc) {
 
 int Colosseum::getTopGladiator(int trainer_id) {
     if (trainer_id < 0) {
-        GladiatorLevel gladiatorLevel = gladiators_level_tree->getMin();
-        return gladiatorLevel.getID();
+        return gladiators_level_tree->getMax().getID();
     }
-    return trainers_tree->find(Trainer(trainer_id)).gladiators->getMin().getID();
+    return trainers_tree->find(Trainer(trainer_id)).gladiators->getMax().getID();
 }
 
 void Colosseum::getAllGladiatorsByLevel(int trainer_id, int *numOfGladiators, int **gladiators) {
