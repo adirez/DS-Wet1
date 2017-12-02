@@ -37,6 +37,8 @@ int main() {
         cout << arr[i] << " || ";
     }
 
+    colosseum.updateLevels(2, 2);
+
     return 0;
 
 }

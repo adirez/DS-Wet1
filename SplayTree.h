@@ -71,7 +71,6 @@ SplayTree<T>::SplayTree() : root(NULL), min(NULL), max(NULL), size(0) {}
 template<class T>
 SplayTree<T>::~SplayTree() {
     postOrderAuxRemoval(root);
-    root = NULL;
 }
 
 template<class T>

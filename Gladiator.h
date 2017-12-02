@@ -5,6 +5,7 @@
 #ifndef WET1_GLADIATOR_H
 #define WET1_GLADIATOR_H
 
+
 class Gladiator {
 protected:
     friend class Stimulant;

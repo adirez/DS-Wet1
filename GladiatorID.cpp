@@ -24,3 +24,7 @@ int GladiatorID::getID() const {
 int GladiatorID::getLevel() const {
     return Gladiator::getLevel();
 }
+
+Trainer *GladiatorID::getTrainerPtr() const {
+    return ptr_to_trainer;
+}

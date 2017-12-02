@@ -8,6 +8,11 @@
 #include "GladiatorID.h"
 #include "GladiatorLevel.h"
 
+enum GladiatorType {
+    Gladiator_ID,
+    Gladiator_Level
+};
+
 class Colosseum {
 private:
     int num_gladiators;
