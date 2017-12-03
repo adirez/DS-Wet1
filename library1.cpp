@@ -32,6 +32,8 @@ StatusType AddTrainer(void *DS, int trainerID) {
         return INVALID_INPUT;
     } catch (KeyAlreadyExists &e) {
         return FAILURE;
+    } catch (...) {
+        return FAILURE;
     }
     return SUCCESS;
 }
@@ -51,6 +53,8 @@ StatusType BuyGladiator(void *DS, int gladiatorID, int trainerID, int level) {
         return FAILURE;
     } catch (KeyNotFound &e) {
         return FAILURE;
+    } catch (...) {
+        return FAILURE;
     }
     return SUCCESS;
 }
@@ -65,6 +69,8 @@ StatusType FreeGladiator(void *DS, int gladiatorID) {
     } catch (InvalidParameter &e) {
         return INVALID_INPUT;
     } catch (KeyNotFound &e) {
+        return FAILURE;
+    } catch (...) {
         return FAILURE;
     }
     return SUCCESS;
@@ -82,6 +88,8 @@ StatusType LevelUp(void *DS, int gladiatorID, int levelIncrease) {
     } catch (InvalidParameter &e) {
         return INVALID_INPUT;
     } catch (KeyNotFound &e) {
+        return FAILURE;
+    } catch (...) {
         return FAILURE;
     }
     return SUCCESS;
@@ -103,6 +111,8 @@ StatusType GetTopGladiator(void *DS, int trainerID, int *gladiatorID) {
     } catch (EmptyTree &e){
         *gladiatorID = -1;
         return SUCCESS;
+    } catch (...) {
+        return FAILURE;
     }
     return SUCCESS;
 }
@@ -119,6 +129,8 @@ StatusType GetAllGladiatorsByLevel(void *DS, int trainerID, int **gladiators, in
     } catch (InvalidParameter &e) {
         return INVALID_INPUT;
     } catch (KeyNotFound &e) {
+        return FAILURE;
+    } catch (...) {
         return FAILURE;
     }
     return SUCCESS;
@@ -139,6 +151,8 @@ StatusType UpgradeGladiator(void *DS, int gladiatorID, int upgradedID) {
         return FAILURE;
     } catch (KeyAlreadyExists &e) {
         return FAILURE;
+    } catch (...) {
+        return FAILURE;
     }
     return SUCCESS;
 }
@@ -155,6 +169,8 @@ StatusType UpdateLevels(void *DS, int stimulantCode, int stimulantFactor){
     } catch (InvalidParameter &e) {
         return INVALID_INPUT;
     } catch (KeyNotFound &e) {
+        return FAILURE;
+    } catch (...) {
         return FAILURE;
     }
     return SUCCESS;

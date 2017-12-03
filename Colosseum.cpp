@@ -78,6 +78,7 @@ private:
     GladiatorLevel *gladiators2;
     int i;
     int j;
+    int num_of_gladiators;
 
     friend class Colosseum;
     friend class StimulantTrainers;
@@ -85,9 +86,15 @@ private:
 public:
     StimulantLevel(int stimulant_code, int stimulant_factor, int num_of_gladiators) : stimulant_code(stimulant_code),
                                                                                    stimulant_factor(stimulant_factor),
-                                                                                   i(0), j(0){
+                                                                                   i(0), j(0), num_of_gladiators(num_of_gladiators){
         gladiators1 = new GladiatorLevel [num_of_gladiators];
         gladiators2 = new GladiatorLevel [num_of_gladiators];
+    }
+    StimulantLevel(const StimulantLevel& stimulantLevel) : stimulant_code(stimulantLevel.stimulant_code),
+                                                           stimulant_factor(stimulantLevel.stimulant_factor),
+                                                           i(stimulantLevel.i), j(stimulantLevel.j) {
+        gladiators1 = new GladiatorLevel [stimulantLevel.num_of_gladiators];
+        gladiators2 = new GladiatorLevel [stimulantLevel.num_of_gladiators];
     }
 
     ~StimulantLevel() {
@@ -116,18 +123,19 @@ public:
     ~StimulantTrainers() {}
 
     void operator()(Trainer *trainer) {
+        StimulantLevel stimulantLevel(*stimulant);
         int size = trainer->gladiators->getSize();
-        trainer->gladiators->inOrder(*stimulant);
+        trainer->gladiators->inOrder(stimulantLevel);
         delete trainer->gladiators;
         trainer->gladiators = new SplayTree<GladiatorLevel>;
         int j = 0, k = 0;
         for (int i = 0; i < size; ++i) {
-            if ((stimulant->gladiators1[j] < stimulant->gladiators2[k] && stimulant->gladiators1[j].getID() != -1) ||
-                stimulant->gladiators2[k].getID() == -1) {
-                trainer->gladiators->insert(stimulant->gladiators1[j]);
+            if ((stimulantLevel.gladiators1[j] < stimulantLevel.gladiators2[k] && stimulantLevel.gladiators1[j].getID() != -1) ||
+                    stimulantLevel.gladiators2[k].getID() == -1) {
+                trainer->gladiators->insert(stimulantLevel.gladiators1[j]);
                 j++;
             } else {
-                trainer->gladiators->insert(stimulant->gladiators2[k]);
+                trainer->gladiators->insert(stimulantLevel.gladiators2[k]);
                 k++;
             }
         }
@@ -260,41 +268,41 @@ void Colosseum::updateLevels(int stimulantCode, int stimulantFactor) {
     if (stimulantCode < 1 || stimulantFactor < 1) {
         throw InvalidParameter();
     }
-    StimulantID stimulant(stimulantCode, stimulantFactor, num_gladiators);
-    gladiators_id_tree->inOrder(stimulant);
+    StimulantID stimulantID(stimulantCode, stimulantFactor, num_gladiators);
+    gladiators_id_tree->inOrder(stimulantID);
     delete gladiators_id_tree;
     gladiators_id_tree = new SplayTree<GladiatorID>;
     int j = 0, k = 0;
     for (int i = 0; i < num_gladiators; ++i) {
-        if ((stimulant.gladiators1[j] < stimulant.gladiators2[k] && stimulant.gladiators1[j].getID() != -1) ||
-                stimulant.gladiators2[k].getID() == -1) {
-            gladiators_id_tree->insert(stimulant.gladiators1[j]);
+        if ((stimulantID.gladiators1[j] < stimulantID.gladiators2[k] && stimulantID.gladiators1[j].getID() != -1) ||
+                stimulantID.gladiators2[k].getID() == -1) {
+            gladiators_id_tree->insert(stimulantID.gladiators1[j]);
             j++;
         } else {
-            gladiators_id_tree->insert(stimulant.gladiators2[k]);
+            gladiators_id_tree->insert(stimulantID.gladiators2[k]);
             k++;
         }
     }
 
-    StimulantLevel stimulant1(stimulantCode, stimulantFactor, num_gladiators);
-    gladiators_level_tree->inOrder(stimulant1);
+    StimulantLevel stimulantLevel(stimulantCode, stimulantFactor, num_gladiators);
+    gladiators_level_tree->inOrder(stimulantLevel);
     delete gladiators_level_tree;
     gladiators_level_tree = new SplayTree<GladiatorLevel>;
     j = 0, k = 0;
     for (int i = 0; i < num_gladiators; ++i) {
-        if ((stimulant1.gladiators1[j] < stimulant1.gladiators2[k] && stimulant1.gladiators1[j].getID() != -1) ||
-                stimulant1.gladiators2[k].getID() == -1)  {
-            gladiators_level_tree->insert(stimulant1.gladiators1[j]);
+        if ((stimulantLevel.gladiators1[j] < stimulantLevel.gladiators2[k] && stimulantLevel.gladiators1[j].getID() != -1) ||
+                stimulantLevel.gladiators2[k].getID() == -1)  {
+            gladiators_level_tree->insert(stimulantLevel.gladiators1[j]);
             j++;
         } else {
-            gladiators_level_tree->insert(stimulant1.gladiators2[k]);
+            gladiators_level_tree->insert(stimulantLevel.gladiators2[k]);
             k++;
         }
     }
 
-    StimulantLevel stimulant2(stimulantCode, stimulantFactor, num_gladiators);
-    StimulantTrainers stimulant_trainers(&stimulant2);
-    trainers_tree->inOrder(stimulant_trainers);
+    StimulantLevel stimulantLevel2(stimulantCode, stimulantFactor, num_gladiators);
+    StimulantTrainers stimulantTrainers(&stimulantLevel2);
+    trainers_tree->inOrder(stimulantTrainers);
 }
 
 
