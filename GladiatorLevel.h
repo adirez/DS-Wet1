@@ -11,8 +11,6 @@ class GladiatorLevel {
     int level;
 
     friend bool operator==(const GladiatorLevel &gladiator1, const GladiatorLevel &gladiator2);
-    friend bool operator!=(const GladiatorLevel &gladiator1, const GladiatorLevel &gladiator2);
-
 public:
     GladiatorLevel();
     GladiatorLevel(int id, int level);

@@ -5,6 +5,19 @@
 #include "GladiatorLevel.h"
 
 
+GladiatorLevel::GladiatorLevel(int id, int level) : id(id), level(level) {}
+
+GladiatorLevel::GladiatorLevel() : id(-1), level(-1) {}
+
+GladiatorLevel::GladiatorLevel(const GladiatorLevel &gladiatorLevel) : id(gladiatorLevel.id), level(gladiatorLevel.level){}
+
+int GladiatorLevel::getID() const {
+    return id;
+}
+
+int GladiatorLevel::getLevel() const {
+    return level;
+}
 
 bool GladiatorLevel::operator<(const GladiatorLevel &gladiator2) const {
     if(level < gladiator2.level) return true;
@@ -22,18 +35,6 @@ bool GladiatorLevel::operator>(const GladiatorLevel &gladiator2) const {
     return false;
 }
 
-GladiatorLevel::GladiatorLevel(int id, int level) : id(id), level(level) {}
-
-GladiatorLevel::GladiatorLevel() : id(-1), level(-1) {}
-
-int GladiatorLevel::getLevel() const {
-    return level;
-}
-
-int GladiatorLevel::getID() const {
-    return id;
-}
-
 bool operator==(const GladiatorLevel &gladiator1, const GladiatorLevel &gladiator2){
     return gladiator1.id == gladiator2.id;
 }
@@ -42,4 +43,3 @@ bool operator!=(const GladiatorLevel &gladiator1, const GladiatorLevel &gladiato
     return !(gladiator1 == gladiator2);
 }
 
-GladiatorLevel::GladiatorLevel(const GladiatorLevel &gladiatorLevel) : id(gladiatorLevel.id), level(gladiatorLevel.level){}

@@ -4,10 +4,6 @@
 
 #include "library1.h"
 #include "Colosseum.h"
-#include "iostream"
-
-using std::cout;
-using std::endl;
 
 void *Init() {
     Colosseum *DS;

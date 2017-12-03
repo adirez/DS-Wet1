@@ -22,6 +22,7 @@ private:
 public:
     explicit Trainer(int id);
     ~Trainer();
+    int getID();
     bool operator<(const Trainer &trainer2) const;
     bool operator>(const Trainer &trainer2) const;
 

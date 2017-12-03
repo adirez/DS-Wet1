@@ -15,7 +15,6 @@ class EmptyTree : public SplayException{};
 class KeyAlreadyExists : public SplayException{};
 class KeyNotFound : public SplayException{};
 class InvalidParameter : public SplayException{};
-class NullParameter : public SplayException{};
 class MemoryProblem : public SplayException{};
 
 #endif //WET1_EXCEPTIONS_H

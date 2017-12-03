@@ -12,6 +12,10 @@ Trainer::~Trainer() {
     delete gladiators;
 }
 
+int Trainer::getID() {
+    return id;
+}
+
 bool Trainer::operator<(const Trainer &trainer2) const {
     return id < trainer2.id;
 }

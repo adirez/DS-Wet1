@@ -5,7 +5,6 @@
 #ifndef WET1_SPLAYTREE_H
 #define WET1_SPLAYTREE_H
 
-#include <cstddef>
 #include "Exceptions.h"
 
 template<class T>
@@ -385,10 +384,7 @@ typename SplayTree<T>::Node *SplayTree<T>::findAux(SplayTree::Node *cur_node, co
  */
 
 template<class T>
-SplayTree<T>::Node::Node(const T data, Node *parent) : data(new T(data)), parent(parent) {
-    right_son = NULL;
-    left_son = NULL;
-}
+SplayTree<T>::Node::Node(const T data, Node *parent) : data(new T(data)), parent(parent), right_son(NULL), left_son(NULL) {}
 
 template<class T>
 SplayTree<T>::Node::~Node() {

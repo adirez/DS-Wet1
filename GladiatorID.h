@@ -13,10 +13,7 @@ private:
     int level;
     Trainer *ptr_to_trainer;
 
-    friend class Colosseum;
-
     friend bool operator==(const GladiatorID &gladiator1, const GladiatorID &gladiator2);
-    friend bool operator!=(const GladiatorID &gladiator1, const GladiatorID &gladiator2);
 public:
     GladiatorID();
     GladiatorID(int id, int level, Trainer *ptr_to_trainer);
