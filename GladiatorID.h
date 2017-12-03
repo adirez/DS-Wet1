@@ -11,7 +11,7 @@ class GladiatorID {
 private:
     int id;
     int level;
-    Trainer *ptr_to_trainer;
+    Trainer *trainer_ptr;
 
     friend bool operator==(const GladiatorID &gladiator1, const GladiatorID &gladiator2);
 public:
@@ -22,6 +22,7 @@ public:
     ~GladiatorID() {};
     int getID() const;
     int getLevel() const;
+    void setTrainerPtr(Trainer *trainer);
     Trainer* getTrainerPtr() const;
     bool operator<(const GladiatorID &gladiator2) const;
     bool operator>(const GladiatorID &gladiator2) const;

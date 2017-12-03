@@ -158,19 +158,21 @@ void Colosseum::addTrainer(int trainer_id) {
     num_trainers++;
 }
 
+//Time complexity: log(n) + log(k)
 void Colosseum::buyGladiator(int gladiator_id, int trainer_id, int level) {
     if (gladiator_id <= 0 || trainer_id <= 0 || level <= 0) {
         throw InvalidParameter();
     }
-    try {
-        if(gladiators_id_tree->find(GladiatorID(gladiator_id, 0)).getID() == gladiator_id){
-            throw KeyAlreadyExists();
-        }
-    } catch (KeyNotFound &e) {}
+    GladiatorID gladiatorID(gladiator_id, level);
+    GladiatorLevel gladiatorLevel(gladiator_id, level);
+    Trainer trainer(trainer_id);
 
-    trainers_tree->find(Trainer(trainer_id)).gladiators->insert(GladiatorLevel(gladiator_id, level));
-    gladiators_level_tree->insert(GladiatorLevel(gladiator_id, level));
-    gladiators_id_tree->insert(GladiatorID(gladiator_id, level, &trainers_tree->find(Trainer(trainer_id))));
+    Trainer *trainer_ptr = &(trainers_tree->find(trainer)); //log(k)
+
+    gladiators_id_tree->insert(gladiatorID); //log(n)
+    trainer_ptr->gladiators->insert(gladiatorLevel); //log(n)
+    gladiators_level_tree->insert(gladiatorLevel); //log(n)
+    gladiators_id_tree->find(gladiatorID).setTrainerPtr(trainer_ptr); //1 (after insertion the gladiator is in the root)
     num_gladiators++;
 }
 

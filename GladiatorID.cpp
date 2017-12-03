@@ -7,13 +7,13 @@
 GladiatorID::GladiatorID() : id(-1), level(-1) {}
 
 GladiatorID::GladiatorID(int id, int level, Trainer *ptr_to_trainer) : id(id), level(level) {
-    this->ptr_to_trainer = ptr_to_trainer;
+    this->trainer_ptr = ptr_to_trainer;
 }
 
-GladiatorID::GladiatorID(int id, int level) : id(id), level(level), ptr_to_trainer(NULL) {}
+GladiatorID::GladiatorID(int id, int level) : id(id), level(level), trainer_ptr(NULL) {}
 
 GladiatorID::GladiatorID(const GladiatorID &gladiatorID) : id(gladiatorID.id), level(gladiatorID.level) {
-    ptr_to_trainer = gladiatorID.ptr_to_trainer;
+    trainer_ptr = gladiatorID.trainer_ptr;
 }
 
 int GladiatorID::getID() const {
@@ -25,17 +25,21 @@ int GladiatorID::getLevel() const {
 }
 
 Trainer *GladiatorID::getTrainerPtr() const {
-    return ptr_to_trainer;
+    return trainer_ptr;
+}
+
+void GladiatorID::setTrainerPtr(Trainer *trainer) {
+    trainer_ptr = trainer;
 }
 
 bool GladiatorID::operator<(const GladiatorID &gladiator2) const {
     return id < gladiator2.id;
 }
 
+
 bool GladiatorID::operator>(const GladiatorID &gladiator2) const {
     return id > gladiator2.id;
 }
-
 
 bool operator==(const GladiatorID &gladiator1, const GladiatorID &gladiator2){
     return gladiator1.id == gladiator2.id;
