@@ -10,7 +10,44 @@ using std::endl;
 
 int main() {
     Colosseum colosseum;
+    colosseum.getTopGladiator(-1);
+    int **arr;
+    int *num;
+    colosseum.getAllGladiatorsByLevel(-1, num, arr);
+    free(*arr);
     colosseum.addTrainer(4);
+    colosseum.addTrainer(3);
+    colosseum.addTrainer(7);
+    colosseum.addTrainer(15);
+    colosseum.updateLevels(1,1);
+    colosseum.getTopGladiator(-1);
+    colosseum.buyGladiator(10,4,2);
+    colosseum.getAllGladiatorsByLevel(3, num, arr);
+    free(*arr);
+    colosseum.freeGladiator(10);
+    colosseum.getTopGladiator(-21);
+    colosseum.getAllGladiatorsByLevel(4, num, arr);
+    free(*arr);
+    colosseum.addTrainer(0);
+    colosseum.addTrainer(-3);
+    colosseum.addTrainer(7);
+    colosseum.buyGladiator(101,4,50);
+    colosseum.buyGladiator(102,3,25);
+    colosseum.buyGladiator(103,7,1);
+    colosseum.buyGladiator(104,7,45);
+    colosseum.getTopGladiator(15);
+    colosseum.getAllGladiatorsByLevel(15, num, arr);
+    free(*arr);
+    colosseum.buyGladiator(0,4,50);
+    colosseum.buyGladiator(-10,4,50);
+    colosseum.buyGladiator(101,0,50);
+    colosseum.buyGladiator(101,-3,50);
+    colosseum.buyGladiator(101,4,0);
+    colosseum.buyGladiator(101,4,-50);
+    colosseum.buyGladiator(101,4,55);
+    colosseum.buyGladiator(102,4,555);
+
+    /*colosseum.addTrainer(4);
     colosseum.addTrainer(3);
     colosseum.buyGladiator(101, 4, 50);
     colosseum.addTrainer(5);
@@ -50,6 +87,6 @@ int main() {
     free(arr3);
     free(arr4);
     free(arr5);
-
+*/
     return 0;
 }

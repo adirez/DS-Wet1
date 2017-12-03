@@ -181,6 +181,9 @@ void SplayTree<T>::inOrderReverse(do_something &func) {
 
 template<class T>
 T &SplayTree<T>::getMax() {
+    if (max == NULL) {
+        throw EmptyTree();
+    }
     return *max->data;
 }
 
