@@ -148,6 +148,7 @@ void SplayTree<T>::join(Node *left_tree, Node *right_tree){
         max = NULL;
         min = NULL;
     } else if(right_tree == NULL){
+        left_tree->parent = NULL;
         root = left_tree;
         Node *max_left = left_tree;
         while (max_left->right_son != NULL) {
