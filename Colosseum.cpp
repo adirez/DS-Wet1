@@ -115,19 +115,19 @@ public:
 
     ~StimulantTrainers() {}
 
-    void operator()(Trainer &trainer) {
-        int size = trainer.gladiators->getSize();
-        trainer.gladiators->inOrder(*stimulant);
-        delete trainer.gladiators;
-        trainer.gladiators = new SplayTree<GladiatorLevel>;
+    void operator()(Trainer *trainer) {
+        int size = trainer->gladiators->getSize();
+        trainer->gladiators->inOrder(*stimulant);
+        delete trainer->gladiators;
+        trainer->gladiators = new SplayTree<GladiatorLevel>;
         int j = 0, k = 0;
         for (int i = 0; i < size; ++i) {
             if ((stimulant->gladiators1[j] < stimulant->gladiators2[k] && stimulant->gladiators1[j].getID() != -1) ||
                 stimulant->gladiators2[k].getID() == -1) {
-                trainer.gladiators->insert(stimulant->gladiators1[j]);
+                trainer->gladiators->insert(stimulant->gladiators1[j]);
                 j++;
             } else {
-                trainer.gladiators->insert(stimulant->gladiators2[k]);
+                trainer->gladiators->insert(stimulant->gladiators2[k]);
                 k++;
             }
         }
@@ -161,6 +161,12 @@ void Colosseum::buyGladiator(int gladiator_id, int trainer_id, int level) {
     if(trainers_tree->find(Trainer(trainer_id)) != Trainer(trainer_id)){
         throw KeyNotFound();
     }
+    try {
+        if(gladiators_id_tree->find(GladiatorID(gladiator_id, 0)) == GladiatorID(gladiator_id, 0)){
+            throw KeyAlreadyExists();
+        }
+    } catch (KeyNotFound &e) {}
+
     gladiators_level_tree->insert(GladiatorLevel(gladiator_id, level));
     trainers_tree->find(Trainer(trainer_id)).gladiators->insert(GladiatorLevel(gladiator_id, level));
     gladiators_id_tree->insert(GladiatorID(gladiator_id, level, &trainers_tree->find(Trainer(trainer_id))));
@@ -185,7 +191,7 @@ void Colosseum::levelUp(int gladiator_id, int level_inc) {
     }
     GladiatorID gladiator_by_id = gladiators_id_tree->find(GladiatorID(gladiator_id, 0));
     gladiators_level_tree->remove(GladiatorLevel(gladiator_id, gladiator_by_id.getLevel()));
-    gladiator_by_id.ptr_to_trainer->gladiators->remove(GladiatorLevel(gladiator_id, 0));
+    gladiator_by_id.ptr_to_trainer->gladiators->remove(GladiatorLevel(gladiator_id, gladiator_by_id.getLevel()));
 
     Trainer *ptr_to_trainer = gladiator_by_id.getTrainerPtr();
     int new_level = gladiator_by_id.getLevel() + level_inc;
@@ -239,13 +245,13 @@ void Colosseum::updateGladiator(int gladiator_id, int upgrade_id) {
         GladiatorID to_upgrade = gladiators_id_tree->find(GladiatorID(gladiator_id, 0));
         int level = to_upgrade.level;
         Trainer *trainer = to_upgrade.ptr_to_trainer;
-        gladiators_level_tree->remove(GladiatorLevel(gladiator_id, 0));
+        gladiators_level_tree->remove(GladiatorLevel(gladiator_id, level));
         gladiators_level_tree->insert(GladiatorLevel(upgrade_id, level));
-        trainer->gladiators->remove(GladiatorLevel(gladiator_id, 0));
+        trainer->gladiators->remove(GladiatorLevel(gladiator_id, level));
         trainer->gladiators->insert(GladiatorLevel(upgrade_id, level));
         gladiators_id_tree->remove(to_upgrade);
         gladiators_id_tree->insert(GladiatorID(upgrade_id, level, trainer));
-        return;;
+        return;
     }
     throw KeyAlreadyExists();
 }
@@ -288,6 +294,7 @@ void Colosseum::updateLevels(int stimulantCode, int stimulantFactor) {
 
     StimulantLevel stimulant2(stimulantCode, stimulantFactor, num_gladiators);
     StimulantTrainers stimulant_trainers(&stimulant2);
+    trainers_tree->inOrder(stimulant_trainers);
 }
 
 
