@@ -9,10 +9,10 @@
 #include "GladiatorLevel.h"
 
 /**
- * a class to hold a gladiator in a tree sorted by the id of the gladiators. a gladiator of this type holds his id, level and a pointer to his trainer.
+ * a class to hold a gladiator in a tree sorted by the id of the gladiators. a gladiator of this type will inherit from GladiatorLevel the id & level
+ * fields and hold a pointer to his trainer.
  */
 class GladiatorID : public GladiatorLevel{
-class GladiatorID {
 private:
     Trainer *trainer_ptr;
 
@@ -48,6 +48,11 @@ public:
      * an empty destructor for the gladiator. Empty and thus runs in a time complexity of O(1).
      */
     ~GladiatorID() {};
+    /**
+    * receives a pointer to a trainer and places it in the field of the pointer to a trainer. directly changes a field in the class and thus runs in
+    * a time complexity of O(1).
+    * @param trainer - a pointer to the trainer to set
+    */
     void setTrainerPtr(Trainer *trainer);
     /**
      * a function that finds the pointer of a gladiator's trainer and returns it. directly accesses a field of the class and thus runs in a time

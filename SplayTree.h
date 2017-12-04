@@ -7,10 +7,18 @@
 
 #include "Exceptions.h"
 
+/**
+ * a generic class for a SplayTree, with a nested class for a node. the class holds a pointer to the root of the tree, to the minimum and maximum nodes
+ * and an integer to hold the tree size.
+ */
 template<class T>
 class SplayTree {
 private:
 
+    /**
+     * a nested class of the tree to represent a node in the tree. a node will hold a generic data (which in our case will hold a gladiator or a trainer)
+     * and pointers to his sons and parent.
+     */
     class Node {
     private:
         T *data;
@@ -21,7 +29,15 @@ private:
         friend class SplayTree;
 
     public:
+        /**
+         * a constructor for a tree node.
+         * @param data - the type the node will hold
+         * @param parent - the parent under which the node will be listed as a son
+         */
         Node(const T data, Node *parent);
+        /**
+         * a destructor for the node
+         */
         ~Node();
     };
 
@@ -34,15 +50,34 @@ private:
     SplayTree &operator=(const SplayTree &splay_tree);
     SplayTree(const SplayTree &splay_tree);
 
+    /**
+     * splaying a node to the top of the tree to become a root. in the worst case scenario a node will be splayed through the entire height of the tree
+     * which is averagely log(n) and thus splay will run in a complexity of log n
+     * @param node - the node to splay
+     */
     void splay(Node *node);
+    /**
+     * the types of splays (determined by the position and situation of the node to be splayed).
+     * implemented as shown in the slides.
+     * @param node - the node to be splayed
+     */
     void zig(Node *node);
     void zigZag(Node *node);
     void zigZig(Node *node);
+    /**
+     * an aux function for inOrder that will receive a functor and perform it's action on any node by the sorting order. will run in O(n) since it runs
+     * over 'n' nodes (not including the time of func itself)
+     * @param cur_node - the root of the tree
+     * @param func - the functor to perform on the nodes
+     */
     template<class do_something>
     void inOrderAux(Node *cur_node, do_something &func);
     template<class do_something>
+    // exactly similar to inOrderAux, only it will go in a reverse order. similarly, will run at O(n) (not considering the time of func)
     void inOrderAuxReverese(Node *cur_node, do_something &func);
+    // an aux function for postOrderRemoval function. runs over 'n' nodes and thus run in a complexity of O(n)
     void postOrderAuxRemoval(Node *cur_node);
+    // an aux function for 'find'. runs in an average complexity of log(n).
     Node *findAux(Node *cur_node, const T& key);
     void join(Node *left_tree, Node *right_tree);
 

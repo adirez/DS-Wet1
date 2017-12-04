@@ -33,12 +33,10 @@ public:
      * @param gladiatorLevel
      */
     GladiatorLevel(const GladiatorLevel &gladiatorLevel);
-
-    virtual ~GladiatorLevel() {};
     /**
      * an empty destructor for the gladiator. empty and thus runs in a time complexity of O(1).
      */
-    ~GladiatorLevel() {};
+    virtual ~GladiatorLevel() {};
     /**
      * a function that finds the id of a gladiator and returns it. directly accesses a field of the class and thus runs in a time complexity of O(1).
      * @return - the id of the gladiator
@@ -49,9 +47,6 @@ public:
      * @return - the level of the gladiator
      */
     int getLevel() const;
-
-    virtual bool operator<(const GladiatorLevel &gladiator2) const;
-    virtual bool operator>(const GladiatorLevel &gladiator2) const;
     /**
      * an operator to determine out of two gladiators which is the 'smaller'. since the type is of GladiatorLevel, the 'smaller' gladiator will be the
      * one with the lower level. in case of identical levels, the smaller one will be the one with the bigger id. the operator directly accesses fields
@@ -59,7 +54,7 @@ public:
      * @param gladiator2 - the gladiator to compare to
      * @return - true if the first gladiator is smaller than the second one and false otherwise.
      */
-    bool operator<(const GladiatorLevel &gladiator2) const;
+    virtual bool operator<(const GladiatorLevel &gladiator2) const;
     /**
      * an operator to determine out of two gladiators which is the 'bigger'. since the type is of GladiatorLevel, the 'bigger' gladiator will be the
      * one with the higher level. in case of identical levels, the smaller one will be the one with the lower id.the operator directly accesses fields
@@ -67,7 +62,7 @@ public:
      * @param gladiator2 - the gladiator to compare to
      * @return - true if the first gladiator is bigger than the second one and false otherwise.
      */
-    bool operator>(const GladiatorLevel &gladiator2) const;
+    virtual bool operator>(const GladiatorLevel &gladiator2) const;
 };
 
 /**
