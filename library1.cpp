@@ -22,7 +22,7 @@ StatusType AddTrainer(void *DS, int trainerID) {
     Colosseum *colosseum = (Colosseum *) DS;
     try {
         colosseum->addTrainer(trainerID);
-    } catch (MemoryProblem &e) {
+    } catch (std::bad_alloc &e) {
         return ALLOCATION_ERROR;
     } catch (InvalidParameter &e) {
         return INVALID_INPUT;
@@ -41,7 +41,7 @@ StatusType BuyGladiator(void *DS, int gladiatorID, int trainerID, int level) {
     Colosseum *colosseum = (Colosseum *) DS;
     try {
         colosseum->buyGladiator(gladiatorID, trainerID, level);
-    } catch (MemoryProblem &e) {
+    } catch (std::bad_alloc &e) {
         return ALLOCATION_ERROR;
     } catch (InvalidParameter &e) {
         return INVALID_INPUT;
@@ -79,7 +79,7 @@ StatusType LevelUp(void *DS, int gladiatorID, int levelIncrease) {
     Colosseum *colosseum = (Colosseum *) DS;
     try {
         colosseum->levelUp(gladiatorID, levelIncrease);
-    } catch (MemoryProblem &e) {
+    } catch (std::bad_alloc &e) {
         return ALLOCATION_ERROR;
     } catch (InvalidParameter &e) {
         return INVALID_INPUT;
@@ -92,13 +92,13 @@ StatusType LevelUp(void *DS, int gladiatorID, int levelIncrease) {
 }
 
 StatusType GetTopGladiator(void *DS, int trainerID, int *gladiatorID) {
-    if (DS == NULL || gladiatorID == NULL || trainerID == 0) {
+    if (DS == NULL || gladiatorID == NULL) {
         return INVALID_INPUT;
     }
     Colosseum *colosseum = (Colosseum *) DS;
     try {
         *gladiatorID = colosseum->getTopGladiator(trainerID);
-    } catch (MemoryProblem &e) {
+    } catch (std::bad_alloc &e) {
         return ALLOCATION_ERROR;
     } catch (InvalidParameter &e) {
         return INVALID_INPUT;
@@ -114,19 +114,22 @@ StatusType GetTopGladiator(void *DS, int trainerID, int *gladiatorID) {
 }
 
 StatusType GetAllGladiatorsByLevel(void *DS, int trainerID, int **gladiators, int *numOfGladiator){
-    if (DS == NULL || gladiators == NULL || numOfGladiator == NULL || trainerID == 0) {
+    if (DS == NULL || gladiators == NULL || numOfGladiator == NULL) {
         return INVALID_INPUT;
     }
     Colosseum *colosseum = (Colosseum *) DS;
     try {
         colosseum->getAllGladiatorsByLevel(trainerID, numOfGladiator, gladiators);
-    } catch (MemoryProblem &e) {
+    } catch (std::bad_alloc &e) {
         return ALLOCATION_ERROR;
     } catch (InvalidParameter &e) {
         return INVALID_INPUT;
     } catch (KeyNotFound &e) {
         return FAILURE;
-    } catch (...) {
+    } catch (EmptyTree &e){
+        *gladiators = NULL;
+        return SUCCESS;
+    }catch (...) {
         return FAILURE;
     }
     return SUCCESS;
@@ -139,7 +142,7 @@ StatusType UpgradeGladiator(void *DS, int gladiatorID, int upgradedID) {
     Colosseum *colosseum = (Colosseum *) DS;
     try {
         colosseum->updateGladiator(gladiatorID, upgradedID);
-    } catch (MemoryProblem &e) {
+    } catch (std::bad_alloc &e) {
         return ALLOCATION_ERROR;
     } catch (InvalidParameter &e) {
         return INVALID_INPUT;
@@ -160,6 +163,8 @@ StatusType UpdateLevels(void *DS, int stimulantCode, int stimulantFactor){
     Colosseum *colosseum = (Colosseum *) DS;
     try {
         colosseum->updateLevels(stimulantCode, stimulantFactor);
+    } catch (std::bad_alloc &e) {
+        return ALLOCATION_ERROR;
     } catch (MemoryProblem &e) {
         return ALLOCATION_ERROR;
     } catch (InvalidParameter &e) {

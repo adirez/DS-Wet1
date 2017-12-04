@@ -9,6 +9,7 @@
 #include <exception>
 #include <stdexcept>
 
+
 class SplayException : public std::exception{};
 
 class EmptyTree : public SplayException{};

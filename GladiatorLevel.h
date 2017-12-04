@@ -7,6 +7,7 @@
 
 
 class GladiatorLevel {
+protected:
     int id;
     int level;
 
@@ -15,11 +16,13 @@ public:
     GladiatorLevel();
     GladiatorLevel(int id, int level);
     GladiatorLevel(const GladiatorLevel &gladiatorLevel);
-    ~GladiatorLevel() {};
+
+    virtual ~GladiatorLevel() {};
     int getID() const;
     int getLevel() const;
-    bool operator<(const GladiatorLevel &gladiator2) const;
-    bool operator>(const GladiatorLevel &gladiator2) const;
+
+    virtual bool operator<(const GladiatorLevel &gladiator2) const;
+    virtual bool operator>(const GladiatorLevel &gladiator2) const;
 };
 
 bool operator==(const GladiatorLevel &gladiator1, const GladiatorLevel &gladiator2);

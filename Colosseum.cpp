@@ -150,15 +150,17 @@ Colosseum::~Colosseum() {
     delete trainers_tree;
 }
 
+//Time complexity: ~log(k)
 void Colosseum::addTrainer(int trainer_id) {
     if (trainer_id <= 0) {
         throw InvalidParameter();
     }
-    trainers_tree->insert(Trainer(trainer_id));
+    //insert will throw KeyAlreadyExist in case the trainer is already in the system
+    trainers_tree->insert(Trainer(trainer_id)); //~log(k)
     num_trainers++;
 }
 
-//Time complexity: log(n) + log(k)
+//Time complexity: ~log(n) + log(k)
 void Colosseum::buyGladiator(int gladiator_id, int trainer_id, int level) {
     if (gladiator_id <= 0 || trainer_id <= 0 || level <= 0) {
         throw InvalidParameter();
@@ -167,93 +169,116 @@ void Colosseum::buyGladiator(int gladiator_id, int trainer_id, int level) {
     GladiatorLevel gladiatorLevel(gladiator_id, level);
     Trainer trainer(trainer_id);
 
-    Trainer *trainer_ptr = &(trainers_tree->find(trainer)); //log(k)
+    //find will throw KeyNotFound exception in case the trainer is not in the system
+    Trainer *trainer_ptr = &(trainers_tree->find(trainer)); //~log(k)
 
-    gladiators_id_tree->insert(gladiatorID); //log(n)
-    trainer_ptr->gladiators->insert(gladiatorLevel); //log(n)
-    gladiators_level_tree->insert(gladiatorLevel); //log(n)
+    //insert will throw KeyAlreadyExist in case the gladiator is already in the system
+    gladiators_id_tree->insert(gladiatorID); //~log(n)
+    trainer_ptr->gladiators->insert(gladiatorLevel); //~log(n)
+    gladiators_level_tree->insert(gladiatorLevel); //~log(n)
     gladiators_id_tree->find(gladiatorID).setTrainerPtr(trainer_ptr); //1 (after insertion the gladiator is in the root)
     num_gladiators++;
 }
 
+//Time complexity: ~log(n)
 void Colosseum::freeGladiator(int gladiator_id) {
     if (gladiator_id <= 0) {
         throw InvalidParameter();
     }
-    GladiatorID to_delete = gladiators_id_tree->find(GladiatorID(gladiator_id, 0));
-    gladiators_level_tree->remove(GladiatorLevel(gladiator_id, to_delete.getLevel()));
-    Trainer *trainer = to_delete.getTrainerPtr();
-    trainer->gladiators->remove(GladiatorLevel(gladiator_id, to_delete.getLevel()));
-    gladiators_id_tree->remove(to_delete);
+    //find will throw KeyNotFound exception in case the gladiator is not in the system
+    GladiatorID to_delete = gladiators_id_tree->find(GladiatorID(gladiator_id, 0)); //~log(n)
+    GladiatorLevel gladiatorLevel_to_delete(gladiator_id, to_delete.getLevel());
+    gladiators_level_tree->remove(gladiatorLevel_to_delete); //log(n)
+    to_delete.getTrainerPtr()->gladiators->remove(gladiatorLevel_to_delete); //~log(n_trainer)
+    gladiators_id_tree->remove(to_delete); //1 (after find the gladiator is in the root)
     num_gladiators--;
 }
 
+//Time complexity: ~log(n)
 void Colosseum::levelUp(int gladiator_id, int level_inc) {
     if (gladiator_id <= 0 || level_inc <= 0) {
         throw InvalidParameter();
     }
-    GladiatorID gladiator_by_id = gladiators_id_tree->find(GladiatorID(gladiator_id, 0));
-    gladiators_level_tree->remove(GladiatorLevel(gladiator_id, gladiator_by_id.getLevel()));
-    gladiator_by_id.getTrainerPtr()->gladiators->remove(GladiatorLevel(gladiator_id, gladiator_by_id.getLevel()));
+    //find will throw KeyNotFound exception in case the gladiator is not in the system
+    GladiatorID to_level_up = gladiators_id_tree->find(GladiatorID(gladiator_id, 0)); //~log(n)
+    GladiatorLevel gladiatorLevel_to_level_up(gladiator_id, to_level_up.getLevel());
+    Trainer *ptr_to_trainer = to_level_up.getTrainerPtr();
+    int new_level = to_level_up.getLevel() + level_inc;
 
-    Trainer *ptr_to_trainer = gladiator_by_id.getTrainerPtr();
-    int new_level = gladiator_by_id.getLevel() + level_inc;
-    gladiators_id_tree->remove(GladiatorID(gladiator_id, 0));
+    GladiatorID new_gladiatorID(gladiator_id, new_level, ptr_to_trainer);
+    GladiatorLevel new_gladiatorLevel(gladiator_id, new_level);
 
-    gladiators_id_tree->insert(GladiatorID(gladiator_id, new_level, ptr_to_trainer));
-    gladiators_level_tree->insert(GladiatorLevel(gladiator_id, new_level));
-    gladiator_by_id.getTrainerPtr()->gladiators->insert(GladiatorLevel(gladiator_id, new_level));
+    gladiators_level_tree->remove(gladiatorLevel_to_level_up); //~log(n)
+    ptr_to_trainer->gladiators->remove(gladiatorLevel_to_level_up); //~log(n_trainer)
+    gladiators_id_tree->remove(to_level_up); //1 (after find the gladiator is in the root)
+
+    gladiators_id_tree->insert(new_gladiatorID); //~log(n)
+    gladiators_level_tree->insert(new_gladiatorLevel); //~log(n)
+    ptr_to_trainer->gladiators->insert(new_gladiatorLevel); //~log(n_trainer)
 }
 
+//Time complexity: ~log(k) or 1
 int Colosseum::getTopGladiator(int trainer_id) {
+    if (trainer_id == 0){
+        throw InvalidParameter();
+    }
     if (trainer_id < 0) {
-        return gladiators_level_tree->getMax().getID();
+        //getMax will throw EmptyTree exception in case there are no gladiators in the tree
+        return gladiators_level_tree->getMax().getID(); //1 (max is a field in the tree)
     }
-    if(gladiators_id_tree->getSize() == 0){
-        throw EmptyTree();
-    }
-    if(trainers_tree->find(Trainer(trainer_id)).gladiators->getSize() == 0){
-        return -1;
-    }
-    return trainers_tree->find(Trainer(trainer_id)).gladiators->getMax().getID();
+    //getMax will throw EmptyTree exception in case there are no gladiators in the trainer's tree
+    //find will throw KeyNotFound exception in case the trainer is not in the system
+    return trainers_tree->find(Trainer(trainer_id)).gladiators->getMax().getID(); //~log(k)
 }
 
+//Time complexity: ~log(k)+n_trainer or n
 void Colosseum::getAllGladiatorsByLevel(int trainer_id, int *numOfGladiators, int **gladiators) {
+    if(trainer_id == 0){
+        throw InvalidParameter();
+    }
     if (trainer_id < 0) {
         *numOfGladiators = num_gladiators;
         if (*numOfGladiators == 0) {
-            *gladiators = NULL;
-            return;
+            throw EmptyTree();
         }
         GladiatorsByLevel gladiatorsByLevel(*numOfGladiators, gladiators);
-        gladiators_level_tree->inOrderReverse(gladiatorsByLevel);
+        gladiators_level_tree->inOrderReverse(gladiatorsByLevel); //n
         return;
     }
-    *numOfGladiators = trainers_tree->find(Trainer(trainer_id)).gladiators->getSize();
+    //find will throw KeyNotFound exception in case the trainer is not in the system
+    Trainer *trainer = &(trainers_tree->find(Trainer(trainer_id))); //~log(k)
+    *numOfGladiators = trainer->gladiators->getSize();
     if (*numOfGladiators == 0) {
-        *gladiators = NULL;
-        return;
+        throw EmptyTree();
     }
     GladiatorsByLevel gladiatorsByLevel(*numOfGladiators, gladiators);
-    trainers_tree->find(Trainer(trainer_id)).gladiators->inOrderReverse(gladiatorsByLevel);
+    trainer->gladiators->inOrderReverse(gladiatorsByLevel); //n_trainer
 }
 
+//Time complexity: ~log(n)
 void Colosseum::updateGladiator(int gladiator_id, int upgrade_id) {
     if (gladiator_id <= 0 || upgrade_id <= 0) {
         throw InvalidParameter();
     }
     try {
-        gladiators_id_tree->find(GladiatorID(upgrade_id, 0));
+        //find will throw KeyNotFound exception in case the a gladiator with the wanted id is already in the system
+        gladiators_id_tree->find(GladiatorID(upgrade_id, 0)); //~log(n)
     } catch (KeyNotFound &e) {
-        GladiatorID to_upgrade = gladiators_id_tree->find(GladiatorID(gladiator_id, 0));
+        //find will throw KeyNotFound exception in case the gladiator is not in the system
+        GladiatorID to_upgrade = gladiators_id_tree->find(GladiatorID(gladiator_id, 0)); //~log(n)
         int level = to_upgrade.getLevel();
+        GladiatorLevel gladiatorLevel_to_delete(gladiator_id, level);
+        GladiatorLevel gladiatorLevel_to_add(upgrade_id, level);
         Trainer *trainer = to_upgrade.getTrainerPtr();
-        gladiators_level_tree->remove(GladiatorLevel(gladiator_id, level));
-        gladiators_level_tree->insert(GladiatorLevel(upgrade_id, level));
-        trainer->gladiators->remove(GladiatorLevel(gladiator_id, level));
-        trainer->gladiators->insert(GladiatorLevel(upgrade_id, level));
-        gladiators_id_tree->remove(to_upgrade);
-        gladiators_id_tree->insert(GladiatorID(upgrade_id, level, trainer));
+
+        gladiators_level_tree->remove(gladiatorLevel_to_delete); //~log(n)
+        trainer->gladiators->remove(gladiatorLevel_to_delete); //~log(n_trainer)
+
+        gladiators_level_tree->insert(gladiatorLevel_to_add); //~log(n)
+        trainer->gladiators->insert(gladiatorLevel_to_add); //~log(n_trainer)
+
+        gladiators_id_tree->remove(to_upgrade); //1 (after find the gladiator is in the root)
+        gladiators_id_tree->insert(GladiatorID(upgrade_id, level, trainer)); //~log(n)
         return;
     }
     throw KeyAlreadyExists();
