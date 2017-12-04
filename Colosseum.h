@@ -6,7 +6,6 @@
 #define WET1_COLOSSEUM_H
 
 #include "GladiatorID.h"
-#include "GladiatorLevel.h"
 
 /**
  * the head class of the data structure. contains integers to hold the number of gladiators and the number of trainers in the system and all of the
@@ -88,13 +87,64 @@ public:
      */
     int getTopGladiator(int trainer_id);
     /**
-     *
-     * @param trainer_id
-     * @param numOfGladiators
-     * @param gladiators
+     * receives a trainer id, a pointer to an integer and a pointer to an integer array, allocates the array and inserts the IDs of the gladiators belong
+     * to the trainer (if trainerID > 0, otherwise all of the gladiators) sorted by level and returns through the int pointer the number of gladiators in
+     * the array. using the function object we have (GladiatorsByLevel, which contains explanations in the class itself) we will allocate the array and
+     * move the IDs into it. once the creator for the function object is called, it allocates the array and inits an index (an object field) to 0.  if
+     * trainerID < 0, we will then  call inOrderReverse (reverse since we want the sorting to be from high to low) function to iterate through the
+     * gladiators by their level in gladiators_level_tree and send the initialized function object to inOrder so it will be called upon each gladiator.
+     * each gladiator will be sent to the object, have his ID copied into the array and progress the index until inOrder is done. since inOrder will iterate
+     * through all of the gladiators, the time complexity will be O(n). if trainerID > 0, we will have a new trainer temporarily created by the creator
+     * with the given ID (in O(1)) and send it to 'find' function and find the trainer in O(log k). after the trainer is found, we will create the function
+     * object with the given number of gladiators the trainer holds and call inOrderReverse on the trainer's gladiators tree the same way we previously
+     * explained. the iteration through the gladiators will also run in O(n) and since we had to find the trainer, the function will run in a total
+     * complexity of O(n + log k).
+     * @param trainer_id - the id of the trainer
+     * @param numOfGladiators - a pointer to receive the number of gladiators in the array
+     * @param gladiators - a pointer to the array to be allocated
      */
     void getAllGladiatorsByLevel(int trainer_id, int *numOfGladiators, int **gladiators);
+    /**
+     * receives an id of a current gladiator and upgrades his id into a new id. first, we create a temporary gladiator with the upgraded id in O(1) and
+     * send it to 'find' in order to see if a gladiator with this id already exists. the find runs in O(log n). if the received id is allowed, we will
+     * send to 'find' a gladiator with the current id using the constructor (in O(1)) and find him in O(log n). then, we will get his level in O(1)
+     * using getLevel and save it. since we got him through the gladiators_id_tree we have a ptr to his trainer and we'll save it as well. now
+     * we remove the gladiator from the level tree by sending a temp gladiator to 'remove' which runs at log(n) and insert it back with the new level.
+     * since we have a ptr to the trainer, we do the same proccess for the trainer's tree (remove and insert using the constructor with the current id and
+     * level of the gladiator) which will also run in O(log n). last, we remove the gladiator from the id tree and create a new gladiator with the
+     * constructor (by providing the id, level and a ptr to the trainer) and insert it back. since any remove, insert or find in gladiator trees run at
+     * O(log n) the function will run in O(log n).
+     * @param gladiator_id - the current id of the gladiator
+     * @param upgrade_id - the new id of the gladiator
+     */
     void updateGladiator(int gladiator_id, int upgrade_id);
+    /**
+     * the function receives a stimulant code and a stimulant factor and has to update the levels of the relevant gladiators accordingly and re-sort them
+     * as needed. the function uses functors in order to re-sort the gladiators and update their levels. there are a few steps for the function:
+     * the first step is updating the gladiators_by_id tree. in this case we will use the functor StimulantID. the functor's fields are the code & factor,
+     * two arrays of GladiatorID and an index for each of the arrays. to begin, we call the constructor of the functor which will allocate both of the arrays
+     * and init the indexes to 0. once the init is done, we will call inOrder (since we want to keep the sorting in this tree by id, we will use regular
+     * inOrder) and sent the functor to inOrder. this way, every gladiator inOrder will get to will be sent to the functor where he will be checked with
+     * the stimulant code. gladiators which will be found using the drug will be moved to one of the arrays and have their level multiplied by the factor,
+     * and the others will be moved to the second array. once the iteration is done, we have been iterating over n gladiators and thus the time complexity
+     * so far will be of O(n). when the iteration is over, meaning we have all the gladiators of the tree sorted in the arrays, we will delete the tree
+     * which is O(n) since it is deleted in postOrder. then we will init a new splay tree for the gladiators in O(1) since it's empty. now we will follow
+     * an algorithm based on merge - run on both of the arrays simultaniously and each time insert to the tree the gladiator with the lower id. since we
+     * insert into the tree in a sorted way, and any gladiator inserted to the tree gets to the root, the insertion will done in O(1) per each gladiator
+     * because we will immediately find his place and there will be no need to splay (the splay function will exit in the terms check). so, eventually,
+     * we will get a sorted tree in O(n). the same proccess will happen with gladiators_level_tree with the functor StimulantLevel and with sorting by levels
+     * in O(n).
+     * finally, we will only be left with the trainers' gladiators trees. for this case, first of all we will init a StimulantLevel functor since the gladiators
+     * in the trainers' trees are of type GladiatorLevel. next, we have the functor StimulantTrainers which will be used to sort the gladiators. the
+     * functor receives as a parameter the function object of GladiatorLevel and goes through a trainer at a time. for each trainer the functor calls
+     * StimulantLevel for the trainer's tree in order to sort it's own tree of gladiators. each trainer in this functor will have his tree of gladiators sent
+     * to inOrder by StimulantLevel function. the process in this stage is similar to the one in gladiators_level_tree and the trainer's gladiators will be
+     * sorted to two arrays by their code and then sorted to a new tree. per single trainer, the complexity will be O(n). however, when we look at the final
+     * result, we have iterated over 'k' trainers and for each of them we have iterated over 'n(trainer)' gladiators. the sum of all 'n(trainer)' is simply
+     * 'n' so eventually we've iterated over 'k' trainers and 'n' gladiators. therefore, the function will have it's action done in O(n+k).
+     * @param stimulantCode - the code the gladiators will be checked with
+     * @param stimulantFactor - the factor the gladiators' level will be multiplied by (in case needed)
+     */
     void updateLevels(int stimulantCode, int stimulantFactor);
 };
 

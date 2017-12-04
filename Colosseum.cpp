@@ -181,7 +181,7 @@ public:
 /**
  * a function object to be used in Stimulant for trainers to sort gladiators of type GladiatorLevel. receives as a parameter the function object of
  * GladiatorLevel since the gladiators in the trainers' tree are of type GladiatorLevel. the function goes through a trainer at a time and for each
- * trainer summons StimulantLevel for the tree in order to sort it's own tree of gladiators.
+ * trainer calls StimulantLevel for the tree in order to sort it's own tree of gladiators.
  */
 class StimulantTrainers {
 private:
@@ -189,7 +189,7 @@ private:
 public:
 
     /**
-     * a constructor for the function object. receives a StimulantLevel in order to summon for each of the trainers for their own trees of gladiators.
+     * a constructor for the function object. receives a StimulantLevel in order to call for each of the trainers for their own trees of gladiators.
      * @param stimulant - the function object called for the trainers' trees
      */
     explicit StimulantTrainers(StimulantLevel *stimulant) : stimulant(stimulant) {}
