@@ -79,19 +79,29 @@ private:
     void postOrderAuxRemoval(Node *cur_node);
     // an aux function for 'find'. runs in an average complexity of log(n).
     Node *findAux(Node *cur_node, const T& key);
+    // joins two trees when the right tree is bigger than the left tree. runs at O(log n) since it runs to the bottom right of the left tree.
     void join(Node *left_tree, Node *right_tree);
 
 public:
+    // an empty constructor for the tree
     SplayTree();
+    // destructor for the tree
     ~SplayTree();
+    // find an object in the tree and returns it's pointer. calls findAux and runs in O(log n).
     T &find(const T &key);
+    // receives an object, sends it to 'find' to get the closest node and inserts it to the tree. after that, splays it to the root. runs in O(log n).
     void insert(const T &key);
+    // receives a key of an object to be removed from the tree. finds it, splays to the root, removes and calls 'join' to merge the trees. runs in O(log n).
     void remove(const T &key);
+    // iterates through the nodes in order. calls inOrderAux and receives a func to perform on the nodes. runs in O(n) (for the iteration only).
     template<class do_something>
     void inOrder(do_something &func);
+    // iterates through the nodes in reverse order. calls inOrderReverseAux and receives a func to perform on the nodes. runs in O(n) (iteration only).
     template<class do_something>
     void inOrderReverse(do_something &func);
+    // returns the maximum object of the tree. runs in O(1) since the tree holds a pointer for the max.
     T &getMax();
+    // returns the size (int) of the tree. runs in O(1) since the tree holds an integer for the size.
     int getSize();
 };
 
