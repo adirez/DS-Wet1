@@ -12,7 +12,6 @@
  * a class to hold a gladiator in a tree sorted by the id of the gladiators. a gladiator of this type holds his id, level and a pointer to his trainer.
  */
 class GladiatorID : public GladiatorLevel{
-class GladiatorID {
 private:
     Trainer *trainer_ptr;
 
