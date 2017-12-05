@@ -53,6 +53,9 @@ public:
     * a time complexity of O(1).
     * @param trainer - a pointer to the trainer to set
     */
+
+    void setLevel(int factor);
+
     void setTrainerPtr(Trainer *trainer);
     /**
      * a function that finds the pointer of a gladiator's trainer and returns it. directly accesses a field of the class and thus runs in a time

@@ -20,6 +20,10 @@ void GladiatorID::setTrainerPtr(Trainer *trainer) {
     trainer_ptr = trainer;
 }
 
+void GladiatorID::setLevel(int factor) {
+    level *= factor;
+}
+
 bool GladiatorID::operator<(const GladiatorID &gladiator2) const {
     return id < gladiator2.id;
 }

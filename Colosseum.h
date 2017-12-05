@@ -6,6 +6,7 @@
 #define WET1_COLOSSEUM_H
 
 #include "GladiatorID.h"
+#include "Stimulant.h"
 
 /**
  * the head class of the data structure. contains integers to hold the number of gladiators and the number of trainers in the system and all of the
