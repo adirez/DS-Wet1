@@ -47,9 +47,6 @@ public:
      * @return - the level of the gladiator
      */
     int getLevel() const;
-
-    virtual bool operator<(const GladiatorLevel &gladiator2) const;
-    virtual bool operator>(const GladiatorLevel &gladiator2) const;
     /**
      * an operator to determine out of two gladiators which is the 'smaller'. since the type is of GladiatorLevel, the 'smaller' gladiator will be the
      * one with the lower level. in case of identical levels, the smaller one will be the one with the bigger id. the operator directly accesses fields
