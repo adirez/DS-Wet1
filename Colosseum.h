@@ -122,19 +122,25 @@ public:
     /**
      * the function receives a stimulant code and a stimulant factor and has to update the levels of the relevant gladiators accordingly and re-sort them
      * as needed. the function uses functors in order to re-sort the gladiators and update their levels. there are a few steps for the function:
-     * the first step is updating the gladiators_by_id tree. in this case we will use the functor StimulantID. the functor's fields are the code & factor,
-     * two arrays of GladiatorID and an index for each of the arrays. to begin, we call the constructor of the functor which will allocate both of the arrays
-     * and init the indexes to 0. once the init is done, we will call inOrder (since we want to keep the sorting in this tree by id, we will use regular
-     * inOrder) and sent the functor to inOrder. this way, every gladiator inOrder will get to will be sent to the functor where he will be checked with
-     * the stimulant code. gladiators which will be found using the drug will be moved to one of the arrays and have their level multiplied by the factor,
-     * and the others will be moved to the second array. once the iteration is done, we have been iterating over n gladiators and thus the time complexity
-     * so far will be of O(n). when the iteration is over, meaning we have all the gladiators of the tree sorted in the arrays, we will delete the tree
-     * which is O(n) since it is deleted in postOrder. then we will init a new splay tree for the gladiators in O(1) since it's empty. now we will follow
-     * an algorithm based on merge - run on both of the arrays simultaniously and each time insert to the tree the gladiator with the lower id. since we
-     * insert into the tree in a sorted way, and any gladiator inserted to the tree gets to the root, the insertion will done in O(1) per each gladiator
-     * because we will immediately find his place and there will be no need to splay (the splay function will exit in the terms check). so, eventually,
-     * we will get a sorted tree in O(n). the same proccess will happen with gladiators_level_tree with the functor StimulantLevel and with sorting by levels
-     * in O(n).
+     * the first step is updating the gladiators_by_id tree. in this case we will use the functor StimulantID defined in Colosseum. the functor's fields
+     * are the code and the factor. to begin, we call the constructor of the functor which will get the code and the factor. once the init is done, we
+     * will call inOrder (since we want to keep the sorting in this tree by id, we will use regular inOrder) and send the functor to inOrder. this way,
+     * every gladiator inOrder will get to will be sent to the functor where he will be checked with the stimulant code. gladiators which will be found
+     * using the drug will have their level multiplied by the factor and the others will stay as - is. once the iteration is done, we have been iterating
+     * over n gladiators and thus the time complexity so far will be of O(n). when the iteration is over, meaning we have all the gladiators of the tree
+     * still sorted by their IDs since they haven't been changed but their levels were updated by the factor and the code. so, eventually, we will get
+     * a sorted and udpated tree in O(n). next, we will move to gladiators_level_tree with the functor StimulantLevel defined in Stimulant file.
+     * the functor's fields are the code & factor, two arrays of GladiatorLevel and an index for each of the arrays. to begin, we call the constructor
+     * of the functor which will allocate both of the arrays and init the indexes to 0. once the init is done, we will call inOrder (since we want to
+     * keep the sorting in this tree by level, we will use regular inOrder) and send the functor to inOrder. this way, every gladiator inOrder will get
+     * to will be sent to the functor where he will be checked with the stimulant code. gladiators which will be found using the drug will be moved to
+     * one of the arrays and have their level multiplied by the factor, and the others will be moved to the second array. once the iteration is done,
+     * we have been iterating over n gladiators and thus the time complexity so far will be of O(n). when the iteration is over, meaning we have all the
+     * gladiators of the tree sorted in the arrays, we will delete the tree which is O(n) since it is deleted in postOrder. then we will init a new splay
+     * tree for the gladiators in O(1) since it's empty. now we will use a function based on merge algorithm - runs on both of the arrays simultaniously
+     * and each time inserts to the tree the gladiator with the lower id. since we insert into the tree in a sorted way, and any gladiator inserted to
+     * the tree gets to the root, the insertion will done in O(1) per each gladiator because we will immediately find his place and there will be no need
+     * to splay (the splay function will exit in the terms check). so, eventually, we will get a sorted tree in O(n).
      * finally, we will only be left with the trainers' gladiators trees. for this case, first of all we will init a StimulantLevel functor since the gladiators
      * in the trainers' trees are of type GladiatorLevel. next, we have the functor StimulantTrainers which will be used to sort the gladiators. the
      * functor receives as a parameter the function object of GladiatorLevel and goes through a trainer at a time. for each trainer the functor calls
