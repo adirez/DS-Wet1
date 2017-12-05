@@ -1,3 +1,5 @@
 dry/*
 tests/*
 CmakeLists.txt
+.idea/*
+cmake-build-debug/*
