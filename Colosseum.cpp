@@ -110,123 +110,6 @@ public:
     }
 };
 
-/**
- * a function object to be used in Stimulant for gladiators of type GladiatorLevel.
- * contains the stimulant code and factor to operate with, two arrays to which we will sort the gladiators (one for those who have used the drug and
- * one for those who haven't) and index for each of the arrays.
- */
-class StimulantLevel {
-private:
-    int stimulant_code;
-    int stimulant_factor;
-    GladiatorLevel *gladiators1;
-    GladiatorLevel *gladiators2;
-    int i;
-    int j;
-    int num_of_gladiators;
-
-    friend class Colosseum;
-    friend class StimulantTrainers;
-
-public:
-    /**
-     * a constructor for the function object. receiving the parameters and allocating the arrays to which we will sort the gladiators by the stimulant
-     * code. index i and index j are initialized to 0 in order to start from the beginning of the arrays. the constructor only allocates arrays and
-     * thus runs in a time complexity of O(1).
-     * @param stimulant_code - the code to check the gladiators by
-     * @param stimulant_factor - the factor to increase the level of the relevant gladiators by
-     * @param num_of_gladiators - the number of gladiators to sort
-     */
-    StimulantLevel(int stimulant_code, int stimulant_factor, int num_of_gladiators) : stimulant_code(stimulant_code),
-                                                                                   stimulant_factor(stimulant_factor),
-                                                                                   i(0), j(0), num_of_gladiators(num_of_gladiators){
-        gladiators1 = new GladiatorLevel [num_of_gladiators];
-        gladiators2 = new GladiatorLevel [num_of_gladiators];
-    }
-    StimulantLevel(const StimulantLevel& stimulantLevel) : stimulant_code(stimulantLevel.stimulant_code),
-                                                           stimulant_factor(stimulantLevel.stimulant_factor),
-                                                           i(stimulantLevel.i), j(stimulantLevel.j) {
-        gladiators1 = new GladiatorLevel [stimulantLevel.num_of_gladiators];
-        gladiators2 = new GladiatorLevel [stimulantLevel.num_of_gladiators];
-    }
-
-    /**
-     * a destructor for the function object. deletes both of the allocated arrays. the destructor only deletes two arrays and thus runs in a time
-     * complexity of O(1).
-     */
-    ~StimulantLevel() {
-        delete[] gladiators1;
-        delete[] gladiators2;
-    }
-
-    /**
-     * the operator sent to inOrder by Stimulant function. the action will be done through operator(). each gladiator sent to () will be
-     * checked with the stimulant code and according to that sent to the relevant allocated array and increase the relevant index. the gladiators sent
-     * to the first array are the ones that have been using the drug and therefore their level will be increased according to the factor. the function
-     * calls a constructor and uses 'get' functions and thus runs in a time complexity of O(1).
-     * @param gladiator - the gladiator found at inOrder which will be copied to one of the arrays
-     */
-    void operator()(GladiatorLevel *gladiator) {
-        if (gladiator->getID() % stimulant_code == 0) {
-            GladiatorLevel gladiatorLevel(gladiator->getID(), gladiator->getLevel()*stimulant_factor);
-            gladiators1[i] = gladiatorLevel;
-            i++;
-        } else {
-            gladiators2[j] = *gladiator;
-            j++;
-        }
-    }
-};
-
-/**
- * a function object to be used in Stimulant for trainers to sort gladiators of type GladiatorLevel. receives as a parameter the function object of
- * GladiatorLevel since the gladiators in the trainers' tree are of type GladiatorLevel. the function goes through a trainer at a time and for each
- * trainer calls StimulantLevel for the tree in order to sort it's own tree of gladiators.
- */
-class StimulantTrainers {
-private:
-    StimulantLevel *stimulant;
-public:
-
-    /**
-     * a constructor for the function object. receives a StimulantLevel in order to call for each of the trainers for their own trees of gladiators.
-     * @param stimulant - the function object called for the trainers' trees
-     */
-    explicit StimulantTrainers(StimulantLevel *stimulant) : stimulant(stimulant) {}
-
-    /**
-     * empty destructor for the function object
-     */
-    ~StimulantTrainers() {}
-
-    /**
-     * the operator sent to inOrder by Stimulant function. the action will be done through operator(). each trainer sent to () will have it's
-     * gladiators tree sent to stimulant compatible for GladiatorLevel. the tree will then be checked with the stimulant code and according to
-     * that gladiators will be sent to the relevant allocated array and increase the relevant index of StimulantLevel. StimulantLevel runs in a time
-     * complexity of O(1) per single gladiator. therefore, in the worst case scenario a trainer will have 'n' gladiators and thus the function will
-     * run in a time complexity of O(n).
-     * @param trainer - the trainer whose tree will be sent to StimulateLevel
-     */
-    void operator()(Trainer *trainer) {
-        StimulantLevel stimulantLevel(*stimulant);
-        int size = trainer->gladiators->getSize();
-        trainer->gladiators->inOrder(stimulantLevel);
-        delete trainer->gladiators;
-        trainer->gladiators = new SplayTree<GladiatorLevel>;
-        int j = 0, k = 0;
-        for (int i = 0; i < size; ++i) {
-            if ((stimulantLevel.gladiators1[j] < stimulantLevel.gladiators2[k] && stimulantLevel.gladiators1[j].getID() != -1) ||
-                    stimulantLevel.gladiators2[k].getID() == -1) {
-                trainer->gladiators->insert(stimulantLevel.gladiators1[j]);
-                j++;
-            } else {
-                trainer->gladiators->insert(stimulantLevel.gladiators2[k]);
-                k++;
-            }
-        }
-    }
-};
-
 Colosseum::Colosseum() : num_gladiators(0), num_trainers(0) {
     gladiators_id_tree = new SplayTree<GladiatorID>;
     gladiators_level_tree = new SplayTree<GladiatorLevel>;
@@ -378,11 +261,11 @@ void Colosseum::updateLevels(int stimulantCode, int stimulantFactor) {
         throw InvalidParameter();
     }
     StimulantID stimulantID(stimulantCode, stimulantFactor, num_gladiators);
-    gladiators_id_tree->inOrder(stimulantID);
-    delete gladiators_id_tree;
+    gladiators_id_tree->inOrder(stimulantID); //n
+    delete gladiators_id_tree; //n
     gladiators_id_tree = new SplayTree<GladiatorID>;
     int j = 0, k = 0;
-    for (int i = 0; i < num_gladiators; ++i) {
+    for (int i = 0; i < num_gladiators; ++i) { //n
         if ((stimulantID.gladiators1[j] < stimulantID.gladiators2[k] && stimulantID.gladiators1[j].getID() != -1) ||
                 stimulantID.gladiators2[k].getID() == -1) {
             gladiators_id_tree->insert(stimulantID.gladiators1[j]);
@@ -393,28 +276,27 @@ void Colosseum::updateLevels(int stimulantCode, int stimulantFactor) {
         }
     }
 
-    StimulantLevel stimulantLevel(stimulantCode, stimulantFactor, num_gladiators);
-    gladiators_level_tree->inOrder(stimulantLevel);
+    Stimulant stimulant(stimulantCode, stimulantFactor, num_gladiators);
+    gladiators_level_tree->inOrder(stimulant);
     delete gladiators_level_tree;
     gladiators_level_tree = new SplayTree<GladiatorLevel>;
-    j = 0, k = 0;
-    for (int i = 0; i < num_gladiators; ++i) {
-        if ((stimulantLevel.gladiators1[j] < stimulantLevel.gladiators2[k] && stimulantLevel.gladiators1[j].getID() != -1) ||
-                stimulantLevel.gladiators2[k].getID() == -1)  {
-            gladiators_level_tree->insert(stimulantLevel.gladiators1[j]);
-            j++;
-        } else {
-            gladiators_level_tree->insert(stimulantLevel.gladiators2[k]);
-            k++;
-        }
-    }
+    merge(&stimulant);
 
-    StimulantLevel stimulantLevel2(stimulantCode, stimulantFactor, num_gladiators);
-    StimulantTrainers stimulantTrainers(&stimulantLevel2);
+    Stimulant stimulant_trainer(stimulantCode, stimulantFactor, num_gladiators);
+    StimulantTrainers stimulantTrainers(&stimulant_trainer);
     trainers_tree->inOrder(stimulantTrainers);
 }
 
-
-
-
-
+void Colosseum::merge(Stimulant *stimulant) {
+    int j = 0, k = 0;
+    for (int i = 0; i < num_gladiators; ++i) {
+        if ((stimulant->gladiators1[j] < stimulant->gladiators2[k] && stimulant->gladiators1[j].getID() != -1) ||
+            stimulant->gladiators2[k].getID() == -1)  {
+            gladiators_level_tree->insert(stimulant->gladiators1[j]);
+            j++;
+        } else {
+            gladiators_level_tree->insert(stimulant->gladiators2[k]);
+            k++;
+        }
+    }
+}

@@ -6,6 +6,8 @@
 #define WET1_COLOSSEUM_H
 
 #include "GladiatorID.h"
+#include "Stimulant.h"
+
 
 /**
  * the head class of the data structure. contains integers to hold the number of gladiators and the number of trainers in the system and all of the
@@ -26,7 +28,10 @@ private:
      * allow '= delete'.
      */
     Colosseum(const Colosseum &colosseum);
+
     Colosseum &operator=(const Colosseum &colosseum);
+
+    void merge(Stimulant *stimulant);
 public:
     /**
      * an empty constructor for colosseum will init with 0 gladiators and 0 trainers
